@@ -1,6 +1,28 @@
+/**
+ * 
+ * This software is part of the MaterialAPI
+ * 
+ * This api allows plugin developers to create on a easy way custom
+ * items with a custom id and recipes depending on them.
+ * 
+ * MaterialAPI is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or 
+ * any later version.
+ *  
+ * MerchantAPI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MaterialAPI. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
 package me.cybermaxke.materialapi.inventory;
 
 import java.awt.Color;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,10 +55,18 @@ public class CustomItemStack extends ItemStack {
 		super(mat);
 	}
 	
+	/**
+	 * This contructor loads a nms itemstack.
+	 * @param itemstack
+	 */
 	public CustomItemStack(Object itemstack) {
 		this((ItemStack) (ReflectionUtils.getMethodObject(Classes.CB_CRAFT_ITEMSTACK, "asBukkitCopy", new Class[] { Classes.NMS_ITEMSTACK }, null, new Object[] { itemstack })));
 	}
 
+	/**
+	 * Creating a custom itemstack from a regular one.
+	 * @param itemstack The itemstack.
+	 */
 	public CustomItemStack(ItemStack itemstack) {
 		super(itemstack.getTypeId(), itemstack.getAmount(), itemstack.getDurability());
 		this.setItemMeta(itemstack.getItemMeta());
@@ -46,6 +76,10 @@ public class CustomItemStack extends ItemStack {
 		}
 	}
 
+	/**
+	 * Creating a custom itemstack from a custom material.
+	 * @param material The material.
+	 */
 	public CustomItemStack(CustomMaterial material) {
 		super(material.getMinecraftId(), 1);
 		this.material = material;
@@ -68,24 +102,44 @@ public class CustomItemStack extends ItemStack {
 		}
 	}
 
+	/**
+	 * Returns the custom material the item is holding.
+	 * @return The material.
+	 */
 	public CustomMaterial getMaterial() {
 		return this.material;
 	}
 
+	/**
+	 * Returns if the item is a custom item.
+	 * @return If its a custom item.
+	 */
 	public boolean isCustomItem() {
 		return this.material != null;
 	}
 	
+	/**
+	 * Sets the display name.
+	 * @param name The name.
+	 */
 	public void setName(String name) {
 		ItemMeta m = this.getItemMeta();
 		m.setDisplayName(name != null ? name : this.getName());
 		this.setItemMeta(m);
 	}
 
+	/**
+	 * Returns the diplay name.
+	 * @return The name.
+	 */
 	public String getName() {
 		return this.getItemMeta().getDisplayName();
 	}
 
+	/**
+	 * Sets the lore with removing the old ones.
+	 * @param lore The lore.
+	 */
 	public void setLore(String... lore) {
 		ItemMeta m = this.getItemMeta();
 		List<String> l = m.getLore();
@@ -106,6 +160,10 @@ public class CustomItemStack extends ItemStack {
 		this.setItemMeta(m);
 	}
 
+	/**
+	 * Adds a array of lore.
+	 * @param lore The lore.
+	 */
 	public void addLore(String... lore) {
 		ItemMeta m = this.getItemMeta();
 		List<String> l = m.hasLore() ? m.getLore() : new ArrayList<String>();
@@ -114,9 +172,25 @@ public class CustomItemStack extends ItemStack {
 		this.setItemMeta(m);
 	}
 
+	/**
+	 * Returns the lore the item contains.
+	 * @return The lore.
+	 */
 	public String[] getLore() {
 		ItemMeta m = this.getItemMeta();
-		return !m.hasLore() ? null : m.getLore().toArray(new String[] {});
+		List<String> l = m.hasLore() ? null : new ArrayList<String>(m.getLore());
+		
+		if (!l.isEmpty()) {
+			for (int i = 0; i < l.size(); i++) {
+				String t = l.get(i);
+			
+				if (t.contains(MaterialData.DATA_PREFIX)) {
+					l.remove(t);
+				}
+			}
+		}
+		
+		return !l.isEmpty() ? null : l.toArray(new String[] {});
 	}
 	
 	@Override
@@ -124,6 +198,10 @@ public class CustomItemStack extends ItemStack {
 		return super.isSimilar(itemstack) && InventoryUtils.doItemsMatch(this, new CustomItemStack(itemstack));
 	}
 	
+	/**
+	 * Sets the owner name of a skull.
+	 * @param name The name.
+	 */
 	public void setSkullOwner(String name) {
 		if (name == null) {
 			name = "";
@@ -137,6 +215,10 @@ public class CustomItemStack extends ItemStack {
 		}
 	}
 	
+	/**
+	 * Returns the owner name of the skull.
+	 * @return The name.
+	 */
 	public String getSkullOwner() {
 		ItemMeta m = this.getItemMeta();
 		
@@ -147,6 +229,10 @@ public class CustomItemStack extends ItemStack {
 		return null;
 	}
 	
+	/**
+	 * Sets the color of a item if its dyeable.
+	 * @param color The bukkit color.
+	 */
 	public void setBukkitColor(org.bukkit.Color color) {
 		ItemMeta m = this.getItemMeta();
 		
@@ -156,11 +242,19 @@ public class CustomItemStack extends ItemStack {
 		}
 	}
 	
+	/**
+	 * Sets the color of a item if its dyeable.
+	 * @param color The color.
+	 */
 	public void setColor(Color color) {
 		org.bukkit.Color c = org.bukkit.Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue());
 		this.setBukkitColor(c);
 	}
 	
+	/**
+	 * Returns the bukkit color of a item if its dyeable.
+	 * @return The bukkit color.
+	 */
 	public org.bukkit.Color getBukkitColor() {
 		ItemMeta m = this.getItemMeta();
 		
@@ -171,6 +265,10 @@ public class CustomItemStack extends ItemStack {
     	return null;
 	}
 	
+	/**
+	 * Returns the color of a item if its dyeable.
+	 * @return The color.
+	 */
 	public Color getColor() {	
     	return this.getBukkitColor() == null ? null : new Color(this.getBukkitColor().asRGB());
 	}
