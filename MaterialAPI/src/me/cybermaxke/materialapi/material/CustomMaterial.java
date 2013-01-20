@@ -10,7 +10,7 @@
  * the Free Software Foundation, either version 3 of the License, or 
  * any later version.
  *  
- * MerchantAPI is distributed in the hope that it will be useful,
+ * MaterialAPI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -27,8 +27,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.cybermaxke.materialapi.enchantment.EnchantmentInstance;
+import me.cybermaxke.materialapi.utils.InventoryUtils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -51,6 +53,8 @@ public class CustomMaterial {
 	private int customId = 1000;
 	private int damage = -1;
 	private byte data = -1;
+	
+	private boolean canPlace = true;
 
 	public CustomMaterial(String id, int minecraftId, byte data) {
 		this.id = id.toLowerCase();
@@ -72,85 +76,181 @@ public class CustomMaterial {
 		this(id, material.getId());
 	}
 	
+	/**
+	 * Returns the display name of the material, 'null' if it was never changed.
+	 * @return The name.
+	 */
 	public String getName() {
 		return this.name;
 	}
 	
+	/**
+	 * Sets the display name of the material.
+	 * @param name The name.
+	 */
 	public CustomMaterial setName(String name) {
 		this.name = ChatColor.WHITE + name;
 		return this;
 	}
 	
+	/**
+	 * Returns the minecraft block/item id.
+	 * @return
+	 */
 	public int getMinecraftId() {
 		return this.minecraftId;
 	}
 	
+	/**
+	 * Sets the minecraft block/item id.
+	 * @param id The id.
+	 */
 	public CustomMaterial setMinecraftId(int id) {
 		this.minecraftId = id;
 		return this;
 	}
 	
+	/**
+	 * Returns the id.
+	 * @return
+	 */
 	public String getId() {
 		return this.id;
 	}
 	
+	/**
+	 * Returns the custom id.
+	 * @return
+	 */
 	public int getCustomId() {
 		return this.customId;
 	}
 	
+	/**
+	 * Returns the data value of the material.
+	 * @return The data value.
+	 */
 	public byte getData() {
 		return this.data;
 	}
 	
+	/**
+	 * Sets the data value of the material.
+	 * @param data The data value.
+	 */
 	public CustomMaterial setData(byte data) {
 		this.data = data;
 		return this;
 	}
 	
+	/**
+	 * Returns the custom damage, '-1' if it was never changed.
+	 * @return The damage.
+	 */
 	public int getDamage() {
 		return this.damage;
 	}
 	
+	/**
+	 * Sets the default damage to a custom value.
+	 * @param damage The damage.
+	 */
 	public CustomMaterial setDamage(int damage) {
 		this.damage = damage;
 		return this;
 	}
 	
-	public String[] getLore() {
-		return this.lore.isEmpty() ? null : this.lore.toArray(new String[] {});
-	}
-	
+	/**
+	 * Sets the color of the material.
+	 * @param color The color.
+	 */
 	public CustomMaterial setColor(Color color) {
 		this.color = color;
 		return this;
 	}
 	
+	/**
+	 * Returns the color of the material, 'null' if its not dyeable.
+	 * @return The color.
+	 */
 	public Color getColor() {
-		return this.color;
+		return InventoryUtils.isLeather(Material.getMaterial(this.minecraftId)) ? this.color : null;
 	}
 	
+	/**
+	 * Sets the name of the skull owner.
+	 * @param name The name.
+	 */
 	public CustomMaterial setSkullOwner(String name) {
 		this.skullOwner = name;
 		return this;
 	}
 	
+	/**
+	 * Returns the name of the skull owner of the material, 'null' if it's not a skull.
+	 * @return The name.
+	 */
 	public String getSkullOwner() {
-		return this.skullOwner;
+		return this.minecraftId != Material.SKULL_ITEM.getId() ? null : this.skullOwner;
 	}
 	
+	/**
+	 * Sets if the block can be placed by default.
+	 * @param can Can be placed.
+	 */
+	public CustomMaterial setCanPlace(boolean can) {
+		this.canPlace = can;
+		return this;
+	}
+	
+	/**
+	 * Returns if the custom block can be placed on the given location.
+	 * @param location The location.
+	 */
+	public boolean canPlace(Location location) {
+		return this.canPlace;
+	}
+	
+	/**
+	 * Adds a enchantment to the material, it can be hidden.
+	 * @param enchantment The enchantment.
+	 * @param lvl The lvl.
+	 * @param visible If its visible on the item.
+	 */
 	public CustomMaterial addEnchantment(Enchantment enchantment, int lvl, boolean visible) {
 		this.enchantments.add(new EnchantmentInstance(enchantment, lvl, visible));
 		return this;
 	}
 	
+	/**
+	 * Adds a enchantment to the material.
+	 * @param enchantment The enchantment.
+	 * @param lvl The lvl.
+	 */
 	public CustomMaterial addEnchantment(Enchantment enchantment, int lvl) {
 		return this.addEnchantment(enchantment, lvl, true);
 	}
 	
+	/**
+	 * Returns all the enchantment instances, 'null' if there don't exist any.
+	 * @return The enchantment instances.
+	 */
 	public EnchantmentInstance[] getEnchantments() {
 		return this.enchantments.isEmpty() ? null : this.enchantments.toArray(new EnchantmentInstance[] {});
 	}
 	
+	/**
+	 * Returns all the lore added to the material.
+	 * @return The lore.
+	 */
+	public String[] getLore() {
+		return this.lore.isEmpty() ? null : this.lore.toArray(new String[] {});
+	}
+	
+	/**
+	 * Sets all the lore, with clearing the old.
+	 * @param lore The lore.
+	 */
 	public CustomMaterial setLore(String... lore) {
 		this.lore = new ArrayList<String>();
 		
@@ -166,6 +266,10 @@ public class CustomMaterial {
 		return this;
 	}
 	
+	/**
+	 * Adds lore to the material.
+	 * @param lore The lore.
+	 */
 	public CustomMaterial addLore(String... lore) {
 		for (int i = 0; i < lore.length; i++) {
 			lore[i] = ChatColor.GRAY + lore[i];
@@ -184,6 +288,14 @@ public class CustomMaterial {
 	}
 	
 	public void onInteractEntity(Player player, LivingEntity entity) {
+		
+	}
+	
+	public void onBlockPlaced(Player player, Block block) {
+		
+	}
+	
+	public void onBlockBreak(Player player, Block block) {
 		
 	}
 }

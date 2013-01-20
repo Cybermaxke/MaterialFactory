@@ -10,7 +10,7 @@
  * the Free Software Foundation, either version 3 of the License, or 
  * any later version.
  *  
- * MerchantAPI is distributed in the hope that it will be useful,
+ * MaterialAPI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -37,7 +37,7 @@ public class MaterialAPI extends JavaPlugin {
 	public void onEnable() {
 		String pack = this.getServer().getClass().getPackage().getName();
    		this.version = pack.substring(pack.lastIndexOf('.') + 1).replace("_", ".");
-   		
+
 		new PlayerListener(this);
 		new Classes(this);
 		new MaterialData(this);

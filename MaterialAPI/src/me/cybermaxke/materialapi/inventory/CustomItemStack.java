@@ -10,7 +10,7 @@
  * the Free Software Foundation, either version 3 of the License, or 
  * any later version.
  *  
- * MerchantAPI is distributed in the hope that it will be useful,
+ * MaterialAPI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -40,6 +40,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+/**
+ * A custom itemstack to manage the custom materials.
+ */
 public class CustomItemStack extends ItemStack {
 	private CustomMaterial material = null;
 	
@@ -56,8 +59,8 @@ public class CustomItemStack extends ItemStack {
 	}
 	
 	/**
-	 * This contructor loads a nms itemstack.
-	 * @param itemstack
+	 * This loads a nms itemstack.
+	 * @param itemstack The itemstack.
 	 */
 	public CustomItemStack(Object itemstack) {
 		this((ItemStack) (ReflectionUtils.getMethodObject(Classes.CB_CRAFT_ITEMSTACK, "asBukkitCopy", new Class[] { Classes.NMS_ITEMSTACK }, null, new Object[] { itemstack })));
@@ -90,6 +93,8 @@ public class CustomItemStack extends ItemStack {
 		
 		this.setName(material.getName());
 		this.setLore(material.getLore());
+		this.setColor(material.getColor());
+		this.setSkullOwner(material.getSkullOwner());
 		
 		if (material.getEnchantments() != null) {
 			for (EnchantmentInstance e : material.getEnchantments()) {

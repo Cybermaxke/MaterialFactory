@@ -10,7 +10,7 @@
  * the Free Software Foundation, either version 3 of the License, or 
  * any later version.
  *  
- * MerchantAPI is distributed in the hope that it will be useful,
+ * MaterialAPI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -28,19 +28,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 /**
  * Managing all the custom materials and ids.
  */
 public class MaterialData {
+	private static Plugin plugin;
+	
 	private static File dataFolder;
 	private static File dataFile;
 	
 	public static String DATA_PREFIX = "MMCustomID: ";
+	public static String DATA_PATH = "MMCustomID";
 	
 	private static int data = 0;
 	private static Map<Integer, CustomMaterial> byCustomId = new HashMap<Integer, CustomMaterial>();
@@ -49,6 +55,7 @@ public class MaterialData {
 	private static Map<Integer, String> matDataById = new HashMap<Integer, String>();
 
 	public MaterialData(Plugin plugin) {
+		MaterialData.plugin = plugin; 
 		dataFolder = plugin.getDataFolder();
 		dataFile = new File(dataFolder + File.separator + "MaterialData.yml");
 		load();
@@ -190,5 +197,45 @@ public class MaterialData {
 		}
 		
 		return -1;
+	}
+	
+	/**
+	 * Returns the custom material of the block, 'null' if it's not a custom one.
+	 * @param block The block.
+	 * @return The material.
+	 */
+	public static CustomMaterial getMaterial(Block block) {
+		return !isCustomBlock(block) ? null : getMaterialByCustomId(getCustomId(block));
+	}
+	
+	public static boolean isCustomBlock(Block block) {
+		return getCustomId(block) != -1;
+	}
+	
+	/**
+	 * Sets the custom id of a block.
+	 * @param block The block.
+	 * @param id The custom id.
+	 * @return 
+	 * @return The block.
+	 */
+	public static Block setCustomBlockId(Block block, int id) {
+		FixedMetadataValue v = new FixedMetadataValue(plugin, id);
+		block.setMetadata(DATA_PATH, v);
+		return block;
+	}
+	
+	/**
+	 * Returns the custom id of a block, '-1' if its not a custom block.
+	 * @param block The block.
+	 * @return The custom id.
+	 */
+	public static int getCustomId(Block block) {	
+		if (!block.hasMetadata(DATA_PATH)) {
+			return -1;
+		}
+		
+		List<MetadataValue> v = block.getMetadata(DATA_PATH);
+		return v.get(0).asInt();
 	}
 }

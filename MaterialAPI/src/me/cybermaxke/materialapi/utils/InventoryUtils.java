@@ -10,7 +10,7 @@
  * the Free Software Foundation, either version 3 of the License, or 
  * any later version.
  *  
- * MerchantAPI is distributed in the hope that it will be useful,
+ * MaterialAPI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -21,8 +21,13 @@
  */
 package me.cybermaxke.materialapi.utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import me.cybermaxke.materialapi.inventory.CustomItemStack;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 
 public class InventoryUtils {
@@ -60,5 +65,11 @@ public class InventoryUtils {
 		}
 		
 		return true;
+	}
+	
+	public static boolean isLeather(Material material) {
+		List<Material> m = new ArrayList<Material>();
+		m.addAll(Arrays.asList(new Material[] { Material.LEATHER_BOOTS, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_HELMET }));
+		return m.contains(material);
 	}
 }
