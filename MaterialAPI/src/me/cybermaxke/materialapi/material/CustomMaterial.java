@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.cybermaxke.materialapi.enchantment.EnchantmentInstance;
+import me.cybermaxke.materialapi.map.CustomMap;
 import me.cybermaxke.materialapi.utils.InventoryUtils;
 
 import org.bukkit.ChatColor;
@@ -48,6 +49,7 @@ public class CustomMaterial {
 	private String skullOwner = null;
 	
 	private Color color = null;
+	private CustomMap map = null;
 	
 	private int minecraftId = 0;
 	private int customId = 1000;
@@ -111,6 +113,22 @@ public class CustomMaterial {
 	}
 	
 	/**
+	 * Returns the bukkit material.
+	 * @return The material.
+	 */
+	public Material getType() {
+		return Material.getMaterial(this.minecraftId);
+	}
+	
+	/**
+	 * Sets the bukkit material.
+	 * @param material The material.
+	 */
+	public CustomMaterial setType(Material material) {
+		return this.setMinecraftId(material.getId());
+	}
+	
+	/**
 	 * Returns the id.
 	 * @return
 	 */
@@ -140,6 +158,24 @@ public class CustomMaterial {
 	 */
 	public CustomMaterial setData(byte data) {
 		this.data = data;
+		return this;
+	}
+	
+	/**
+	 * Returns the custom map the material is holding, 
+	 * 'null' if it's not a map or if it doesn't exist.
+	 * @return The map.
+	 */
+	public CustomMap getMap() {
+		return this.getType().equals(Material.MAP) ? this.map : null;
+	}
+	
+	/**
+	 * Sets the custom map of the material.
+	 * @param map The map.
+	 */
+	public CustomMaterial setMap(CustomMap map) {
+		this.map = map;
 		return this;
 	}
 	
@@ -174,7 +210,7 @@ public class CustomMaterial {
 	 * @return The color.
 	 */
 	public Color getColor() {
-		return InventoryUtils.isLeather(Material.getMaterial(this.minecraftId)) ? this.color : null;
+		return InventoryUtils.isLeather(this.getType()) ? this.color : null;
 	}
 	
 	/**
@@ -218,7 +254,7 @@ public class CustomMaterial {
 	 * @param visible If its visible on the item.
 	 */
 	public CustomMaterial addEnchantment(Enchantment enchantment, int lvl, boolean visible) {
-		this.enchantments.add(new EnchantmentInstance(enchantment, lvl, visible));
+		this.addEnchantment(new EnchantmentInstance(enchantment, lvl, visible));
 		return this;
 	}
 	
@@ -229,6 +265,24 @@ public class CustomMaterial {
 	 */
 	public CustomMaterial addEnchantment(Enchantment enchantment, int lvl) {
 		return this.addEnchantment(enchantment, lvl, true);
+	}
+	
+	/**
+	 * Adds a enchantment instance to the material.
+	 * @param enchantment
+	 */
+	public CustomMaterial addEnchantment(EnchantmentInstance enchantment) {
+		this.enchantments.add(enchantment);
+		return this;
+	}
+	
+	/**
+	 * Adds multiple enchantment instances at once.
+	 * @param enchantments The enchantments.
+	 */
+	public CustomMaterial addEnchantments(EnchantmentInstance... enchantments) {
+		this.enchantments.addAll(Arrays.asList(enchantments));
+		return this;
 	}
 	
 	/**
@@ -296,6 +350,14 @@ public class CustomMaterial {
 	}
 	
 	public void onBlockBreak(Player player, Block block) {
+		
+	}
+	
+	public void onBlockDamage(Player player, Block block) {
+		
+	}
+	
+	public void onBlockInteract(Player player, Block block) {
 		
 	}
 }

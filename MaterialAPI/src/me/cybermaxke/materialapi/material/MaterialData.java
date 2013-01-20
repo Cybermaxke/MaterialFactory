@@ -55,7 +55,7 @@ public class MaterialData {
 	private static Map<Integer, String> matDataById = new HashMap<Integer, String>();
 
 	public MaterialData(Plugin plugin) {
-		MaterialData.plugin = plugin; 
+		MaterialData.plugin = plugin;
 		dataFolder = plugin.getDataFolder();
 		dataFile = new File(dataFolder + File.separator + "MaterialData.yml");
 		load();

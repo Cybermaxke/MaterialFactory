@@ -105,6 +105,10 @@ public class CustomItemStack extends ItemStack {
 		if (material.getColor() != null) {
 			this.setColor(material.getColor());
 		}
+		
+		if (material.getMap() != null) {
+			material.getMap().apply(this);
+		}
 	}
 
 	/**
@@ -200,7 +204,7 @@ public class CustomItemStack extends ItemStack {
 	
 	@Override
 	public boolean isSimilar(ItemStack itemstack) {
-		return super.isSimilar(itemstack) && InventoryUtils.doItemsMatch(this, new CustomItemStack(itemstack));
+		return super.isSimilar(itemstack) && InventoryUtils.doItemsMatch(this, itemstack == null ? null : new CustomItemStack(itemstack));
 	}
 	
 	/**
@@ -252,7 +256,7 @@ public class CustomItemStack extends ItemStack {
 	 * @param color The color.
 	 */
 	public void setColor(Color color) {
-		org.bukkit.Color c = org.bukkit.Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue());
+		org.bukkit.Color c = color == null ? null : org.bukkit.Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue());
 		this.setBukkitColor(c);
 	}
 	

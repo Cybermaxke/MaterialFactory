@@ -23,6 +23,7 @@ package me.cybermaxke.materialapi;
 
 import java.util.logging.Level;
 
+import me.cybermaxke.materialapi.map.MapData;
 import me.cybermaxke.materialapi.material.MaterialData;
 import me.cybermaxke.materialapi.recipe.RecipeData;
 import me.cybermaxke.materialapi.utils.Classes;
@@ -41,6 +42,7 @@ public class MaterialAPI extends JavaPlugin {
 		new PlayerListener(this);
 		new Classes(this);
 		new MaterialData(this);
+		new MapData(this);
 		new RecipeData();
 
 		if (this.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
@@ -55,11 +57,14 @@ public class MaterialAPI extends JavaPlugin {
 		} catch (Exception e) {
 			this.getLogger().log(Level.WARNING, "Couldn't load Metrics!");
 		}
+		
+		this.getLogger().log(Level.INFO, "The api is loaded.");
 	}
 	
 	@Override
 	public void onDisable() {
 		MaterialData.save();
+		MapData.save();
 	}
 	
 	public String getCraftbukkitPackage() {

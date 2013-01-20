@@ -22,11 +22,12 @@
 package me.cybermaxke.materialapi;
 
 import me.cybermaxke.materialapi.inventory.CustomItemStack;
+import me.cybermaxke.materialapi.map.RenderMapsTask;
 import me.cybermaxke.materialapi.material.MaterialData;
 import me.cybermaxke.materialapi.recipe.RecipeData;
 import me.cybermaxke.materialapi.utils.InventoryUtils;
 
-import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
@@ -34,7 +35,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
@@ -42,15 +45,27 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 public class PlayerListener implements Listener {
+	private Plugin plugin;
+	private boolean firstLogin = false;
 
 	public PlayerListener(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		this.plugin = plugin;
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent e) {
+		if (!this.firstLogin) {
+			new RenderMapsTask(this.plugin, 13);
+			this.firstLogin = true;
+		}
 	}
 	
 	@EventHandler
@@ -89,11 +104,28 @@ public class PlayerListener implements Listener {
 		if (MaterialData.isCustomBlock(b)) {
 			if (MaterialData.getMaterial(b) != null) {
 				MaterialData.getMaterial(b).onBlockBreak(p, b);
-				
-				b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getTypeId());
-				b.setType(Material.AIR);
-				b.getWorld().dropItemNaturally(b.getLocation(), new CustomItemStack(MaterialData.getMaterial(b)));
-				e.setCancelled(true);
+
+				if (!p.getGameMode().equals(GameMode.CREATIVE)) {
+					b.setType(Material.AIR);
+					b.getWorld().dropItemNaturally(b.getLocation(), new CustomItemStack(MaterialData.getMaterial(b)));
+					e.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onBlockDamage(BlockDamageEvent e) {
+		if (e.isCancelled()) {
+			return;
+		}
+		
+		Player p = e.getPlayer();
+		Block b = e.getBlock();
+		
+		if (MaterialData.isCustomBlock(b)) {
+			if (MaterialData.getMaterial(b) != null) {
+				MaterialData.getMaterial(b).onBlockDamage(p, b);
 			}
 		}
 	}
@@ -139,10 +171,19 @@ public class PlayerListener implements Listener {
 			return;
 		}
 		
+		Block b = e.getClickedBlock();
 		CustomItemStack is = new CustomItemStack(i);
 			
 		if (is.isCustomItem()) {
-			is.getMaterial().onInteract(p, e.getAction(), e.getClickedBlock(), e.getBlockFace());
+			is.getMaterial().onInteract(p, e.getAction(), b, e.getBlockFace());
+		}
+		
+		if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			if (MaterialData.isCustomBlock(b)) {
+				if (MaterialData.getMaterial(b) != null) {
+					MaterialData.getMaterial(b).onBlockInteract(p, b);
+				}
+			}
 		}
 	}
 	
