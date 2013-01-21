@@ -67,8 +67,8 @@ public class MapData {
 	 * @return The map.
 	 */
 	public static MapView addMapData(String id) {
-		if (mapDataById.containsKey(id)) {
-			short i = mapDataById.get(id);
+		if (mapDataById.containsKey(id.toLowerCase())) {
+			short i = mapDataById.get(id.toLowerCase());
 			
 			if (plugin.getServer().getMap(i) != null) {
 				return plugin.getServer().getMap(i);
@@ -76,8 +76,8 @@ public class MapData {
 		}
 		
 		MapView m = plugin.getServer().createMap(plugin.getServer().getWorlds().get(0));
-		mapDataById.put(id, m.getId());
-		mapData.put(m.getId(), id);
+		mapDataById.put(id.toLowerCase(), m.getId());
+		mapData.put(m.getId(), id.toLowerCase());
 		return m;
 	}
 	

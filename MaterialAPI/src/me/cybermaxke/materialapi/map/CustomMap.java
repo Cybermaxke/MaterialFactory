@@ -106,7 +106,6 @@ public class CustomMap {
 	 */
 	public CustomMap apply(ItemStack itemstack) {
 		itemstack.setDurability(this.getMapId());
-		//this.renderImage();
 		return this;
 	}
 }

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -83,6 +84,14 @@ public class RecipeData {
 	public static CustomItemStack getItem(CraftingInventory inv) {
 		for (CustomRecipe rs : recipes) {
 			if (rs.matches(inv)) {
+				if (!inv.getViewers().isEmpty()) {
+					for (HumanEntity p : inv.getViewers()) {
+						if (rs.getPermission() != null && !p.hasPermission(rs.getPermission())) {
+							return null;
+						}
+					}
+				}
+				
 				return rs.getResult();
 			}
 		}

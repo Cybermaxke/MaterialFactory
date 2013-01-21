@@ -24,11 +24,13 @@ package me.cybermaxke.materialapi.recipe;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.permissions.Permission;
 
 import me.cybermaxke.materialapi.inventory.CustomItemStack;
 import me.cybermaxke.materialapi.utils.InventoryUtils;
 
 public class CustomRecipeFurnace implements CustomRecipe {
+	private Permission permission;
 	private CustomItemStack result;
 	private CustomItemStack ingredient;
 	private int amount = 1;
@@ -64,5 +66,15 @@ public class CustomRecipeFurnace implements CustomRecipe {
 	@Override
 	public boolean matches(Inventory inventory) {
 		return InventoryUtils.doItemsMatch(this.ingredient, inventory.getItem(0) == null ? null : new CustomItemStack(inventory.getItem(0)));
+	}
+
+	@Override
+	public void setPermission(Permission permission) {
+		this.permission = permission;
+	}
+
+	@Override
+	public Permission getPermission() {
+		return this.permission;
 	}
 }

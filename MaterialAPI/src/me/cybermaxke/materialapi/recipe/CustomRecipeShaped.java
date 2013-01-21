@@ -28,11 +28,13 @@ import java.util.List;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.permissions.Permission;
 
 import me.cybermaxke.materialapi.inventory.CustomItemStack;
 import me.cybermaxke.materialapi.utils.InventoryUtils;
 
 public class CustomRecipeShaped implements CustomRecipe {
+	private Permission permission;
 	private CustomItemStack result;
 	private CustomItemStack[] items;
 	private Recipe bukkitrecipe;
@@ -193,5 +195,15 @@ public class CustomRecipeShaped implements CustomRecipe {
 	@Override
 	public Recipe getBukkitRecipe() {
 		return this.bukkitrecipe;
+	}
+
+	@Override
+	public void setPermission(Permission permission) {
+		this.permission = permission;
+	}
+
+	@Override
+	public Permission getPermission() {
+		return this.permission;
 	}
 }

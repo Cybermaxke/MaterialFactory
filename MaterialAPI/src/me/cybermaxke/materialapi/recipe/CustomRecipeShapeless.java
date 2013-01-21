@@ -29,11 +29,13 @@ import java.util.List;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.permissions.Permission;
 
 import me.cybermaxke.materialapi.inventory.CustomItemStack;
 import me.cybermaxke.materialapi.utils.InventoryUtils;
 
 public class CustomRecipeShapeless implements CustomRecipe {
+	private Permission permission;
 	private CustomItemStack result;
 	private List<CustomItemStack> items = new ArrayList<CustomItemStack>();
 
@@ -98,5 +100,15 @@ public class CustomRecipeShapeless implements CustomRecipe {
         }
 
         return l.isEmpty();
+	}
+
+	@Override
+	public void setPermission(Permission permission) {
+		this.permission = permission;
+	}
+
+	@Override
+	public Permission getPermission() {
+		return this.permission;
 	}
 }

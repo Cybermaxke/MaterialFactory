@@ -23,6 +23,7 @@ package me.cybermaxke.materialapi.recipe;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.permissions.Permission;
 
 import me.cybermaxke.materialapi.inventory.CustomItemStack;
 
@@ -35,4 +36,8 @@ public interface CustomRecipe {
 	public Recipe getBukkitRecipe();
 	
 	public boolean matches(Inventory inventory);
+	
+	public void setPermission(Permission permission);
+	
+	public Permission getPermission();
 }
