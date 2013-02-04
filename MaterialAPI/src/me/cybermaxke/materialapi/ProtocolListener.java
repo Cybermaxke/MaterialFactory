@@ -47,7 +47,7 @@ import com.comphenix.protocol.reflect.FieldAccessException;
 public class ProtocolListener extends PacketAdapter {
 
 	public ProtocolListener(Plugin plugin) {
-		super(plugin, ConnectionSide.SERVER_SIDE, 0x67, 0x68);
+		super(plugin, ConnectionSide.BOTH, 0x67, 0x68, 0x66);
 		ProtocolLibrary.getProtocolManager().addPacketListener(this);
 	}
 
@@ -74,6 +74,11 @@ public class ProtocolListener extends PacketAdapter {
 					}
 					
 					break;
+				}
+				
+				case 0x66: {
+					//Updating the slots?
+					//How to get the window id?
 				}
 			}
 		} catch (FieldAccessException ex) {

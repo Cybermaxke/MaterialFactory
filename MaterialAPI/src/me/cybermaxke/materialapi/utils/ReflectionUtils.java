@@ -22,7 +22,6 @@
 package me.cybermaxke.materialapi.utils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ReflectionUtils {
@@ -32,9 +31,9 @@ public class ReflectionUtils {
 			Field f = clazz.getDeclaredField(field);
 			f.setAccessible(true);
 			return f.get(object);
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			return null;
-		}
+		} catch (Exception ex) {} 
+		
+		return null;
 	}
 	
 	public static void setFieldObject(Class<?> clazz, String field, Object object, Object newObj) {	
@@ -42,9 +41,7 @@ public class ReflectionUtils {
 			Field f = clazz.getDeclaredField(field);
 			f.setAccessible(true);
 			f.set(object, newObj);
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			return;
-		}
+		} catch (Exception ex) {}
 	}
 	
 	public static void invokeMethod(Class<?> clazz, String method, Class<?>[] args, Object object, Object[] objects) {
@@ -52,7 +49,12 @@ public class ReflectionUtils {
 			Method m = clazz.getDeclaredMethod(method, args);
 			m.setAccessible(true);
 			m.invoke(object, objects);
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
+		} catch (Exception ex) {}
+	}
+	
+	public static <T> Object getMethodObject(Class<? extends T> type, Class<?> clazz, String method, Class<?>[] args, Object object, Object[] objects) {
+		Object o = getMethodObject(clazz, method, args, object, objects);
+		return o == null ? null : type.cast(o);
 	}
 	
 	public static Object getMethodObject(Class<?> clazz, String method, Class<?>[] args, Object object, Object[] objects) {
@@ -60,9 +62,9 @@ public class ReflectionUtils {
 			Method m = clazz.getDeclaredMethod(method, args);
 			m.setAccessible(true);
 			return m.invoke(object, objects);
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			return null;
-		}
+		} catch (Exception ex) {}
+		
+		return null; 
 	}
 	
 	public static Object getMethodObject(Class<?> clazz, String method, Object object) {
@@ -72,8 +74,8 @@ public class ReflectionUtils {
 	public static Object newInstance(Class<?> clazz, Class<?>[] args, Object[] objects) {
 		try {
 			return clazz.getConstructor(args).newInstance(objects);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			return null;
-		}
+		} catch (Exception ex) {} 
+		
+		return null;
 	}
 }

@@ -36,6 +36,7 @@ public class Classes {
 	public static Class<?> NMS_SHAPELESS_RECIPES;
 	public static Class<?> NMS_FURNACE_RECIPES;
 	public static Class<?> NMS_ITEMSTACK;
+	public static Class<?> NMS_ITEM_ARMOR;
 
 	public Classes(MaterialAPI plugin) {
 		try {
@@ -50,6 +51,7 @@ public class Classes {
 			NMS_SHAPELESS_RECIPES = Class.forName(plugin.getNMSPackage() + ".ShapelessRecipes");
 			NMS_FURNACE_RECIPES = Class.forName(plugin.getNMSPackage() + ".RecipesFurnace");
 			NMS_ITEMSTACK = Class.forName(plugin.getNMSPackage() + ".ItemStack");
+			NMS_ITEM_ARMOR = Class.forName(plugin.getNMSPackage() + ".ItemArmor");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

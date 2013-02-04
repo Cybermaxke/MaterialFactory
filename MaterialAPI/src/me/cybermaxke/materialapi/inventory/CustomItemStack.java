@@ -26,8 +26,12 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import me.cybermaxke.materialapi.MaterialAPI;
 import me.cybermaxke.materialapi.enchantment.EnchantmentInstance;
+import me.cybermaxke.materialapi.enchantment.EnchantmentCustom;
 import me.cybermaxke.materialapi.material.CustomMaterial;
 import me.cybermaxke.materialapi.material.MaterialData;
 import me.cybermaxke.materialapi.utils.Classes;
@@ -35,6 +39,7 @@ import me.cybermaxke.materialapi.utils.InventoryUtils;
 import me.cybermaxke.materialapi.utils.ReflectionUtils;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -63,7 +68,7 @@ public class CustomItemStack extends ItemStack {
 	 * @param itemstack The itemstack.
 	 */
 	public CustomItemStack(Object itemstack) {
-		this((ItemStack) (ReflectionUtils.getMethodObject(Classes.CB_CRAFT_ITEMSTACK, "asBukkitCopy", new Class[] { Classes.NMS_ITEMSTACK }, null, new Object[] { itemstack })));
+		this((ItemStack) (ReflectionUtils.getMethodObject(Classes.CB_CRAFT_ITEMSTACK, "asCraftMirror", new Class[] { Classes.NMS_ITEMSTACK }, null, new Object[] { itemstack })));
 	}
 
 	/**
@@ -96,9 +101,13 @@ public class CustomItemStack extends ItemStack {
 		this.setColor(material.getColor());
 		this.setSkullOwner(material.getSkullOwner());
 		
+		if (MaterialAPI.ENCHANTMENT_DATA) {
+			this.addEnchantment(EnchantmentCustom.DATA_ID, material.getCustomId());
+		}
+		
 		if (material.getEnchantments() != null) {
 			for (EnchantmentInstance e : material.getEnchantments()) {
-				this.addUnsafeEnchantment(e.getEnchantment(), e.getLvl());
+				this.addEnchantment(e.getEnchantment(), e.getLvl());
 			}
 		}
 		
@@ -109,6 +118,36 @@ public class CustomItemStack extends ItemStack {
 		if (material.getMap() != null) {
 			material.getMap().apply(this);
 		}
+	}
+	
+	@Override
+	public void addUnsafeEnchantment(Enchantment enchantment, int lvl) {
+		super.addUnsafeEnchantment(enchantment, lvl);
+		
+		if (enchantment instanceof EnchantmentCustom) {
+			EnchantmentCustom e = (EnchantmentCustom) enchantment;
+			
+			if (e.getEnchantmentName() != null) {
+				this.addLore(e.getEnchantmentName());
+			}
+		}
+	}
+	
+	@Override
+	public void addUnsafeEnchantments(Map<Enchantment, Integer> enchantments) {
+		for (Entry<Enchantment, Integer> e : enchantments.entrySet()) {
+			this.addUnsafeEnchantment(e.getKey(), e.getValue());
+		}
+	}
+	
+	@Override
+	public void addEnchantment(Enchantment enchantment, int lvl) {
+		this.addUnsafeEnchantment(enchantment, lvl);
+	}
+	
+	@Override
+	public void addEnchantments(Map<Enchantment, Integer> enchantments) {
+		this.addUnsafeEnchantments(enchantments);
 	}
 
 	/**
@@ -153,7 +192,7 @@ public class CustomItemStack extends ItemStack {
 		ItemMeta m = this.getItemMeta();
 		List<String> l = m.getLore();
 		
-		if (this.isCustomItem()) {
+		if (this.isCustomItem() && !MaterialAPI.ENCHANTMENT_DATA) {
 			if (l == null) {
 				l = new ArrayList<String>();
 			}
@@ -189,17 +228,19 @@ public class CustomItemStack extends ItemStack {
 		ItemMeta m = this.getItemMeta();
 		List<String> l = m.hasLore() ? null : new ArrayList<String>(m.getLore());
 		
-		if (!l.isEmpty()) {
-			for (int i = 0; i < l.size(); i++) {
-				String t = l.get(i);
+		if (!MaterialAPI.ENCHANTMENT_DATA) {
+			if (!l.isEmpty() && l != null) {
+				for (int i = 0; i < l.size(); i++) {
+					String t = l.get(i);
 			
-				if (t.contains(MaterialData.DATA_PREFIX)) {
-					l.remove(t);
+					if (t.contains(MaterialData.DATA_PREFIX)) {
+						l.remove(t);
+					}
 				}
 			}
 		}
 		
-		return !l.isEmpty() ? null : l.toArray(new String[] {});
+		return l == null || l.isEmpty() ? null : l.toArray(new String[] {});
 	}
 	
 	@Override

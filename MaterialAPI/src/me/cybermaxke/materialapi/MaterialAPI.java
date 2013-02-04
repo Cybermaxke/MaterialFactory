@@ -21,6 +21,8 @@
  */
 package me.cybermaxke.materialapi;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 
 import me.cybermaxke.materialapi.map.MapData;
@@ -29,31 +31,37 @@ import me.cybermaxke.materialapi.recipe.RecipeData;
 import me.cybermaxke.materialapi.utils.Classes;
 import me.cybermaxke.materialapi.utils.Metrics;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MaterialAPI extends JavaPlugin {
 	private String version = "v1.4.6";
+	
+	public static boolean ENCHANTMENT_DATA = false;
 
 	@Override
 	public void onEnable() {
 		String pack = this.getServer().getClass().getPackage().getName();
    		this.version = pack.substring(pack.lastIndexOf('.') + 1).replace("_", ".");
+   		
+   		this.loadConfig();
 
+   		new ArmorTask(this);
 		new PlayerListener(this);
 		new Classes(this);
 		new MaterialData(this);
 		new MapData(this);
 		new RecipeData();
 
-		if (this.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+		if (!ENCHANTMENT_DATA && this.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
 			new ProtocolListener(this);
 			this.getLogger().log(Level.INFO, "Hooked into ProtocolLib!");
 		}
 		
 		try {
-		    Metrics m = new Metrics(this);
-		    m.start();
-		    this.getLogger().log(Level.INFO, "Metrics loaded!");
+			Metrics m = new Metrics(this);
+			m.start();
+			this.getLogger().log(Level.INFO, "Metrics loaded!");
 		} catch (Exception e) {
 			this.getLogger().log(Level.WARNING, "Couldn't load Metrics!");
 		}
@@ -61,10 +69,36 @@ public class MaterialAPI extends JavaPlugin {
 		this.getLogger().log(Level.INFO, "The api is loaded.");
 	}
 	
+	
+	
 	@Override
 	public void onDisable() {
 		MaterialData.save();
 		MapData.save();
+	}
+	
+	public void loadConfig() {		
+		File f = new File(this.getDataFolder(), "Config.yml");
+		YamlConfiguration c = null;
+		
+		if (!this.getDataFolder().exists()) {
+			this.getDataFolder().mkdirs();
+		}
+		
+		if (!f.exists()) {
+			c = new YamlConfiguration();
+			c.set("EnchantmentHoldId", false);
+			
+			try {
+				f.createNewFile();
+				c.save(f);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		c = YamlConfiguration.loadConfiguration(f);
+		c.getBoolean("EnchantmentHoldId");
 	}
 	
 	public String getCraftbukkitPackage() {

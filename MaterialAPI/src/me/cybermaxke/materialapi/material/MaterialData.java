@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import me.cybermaxke.materialapi.MaterialAPI;
+import me.cybermaxke.materialapi.enchantment.EnchantmentCustom;
+
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -181,18 +184,26 @@ public class MaterialData {
 	 * @return The custom id.
 	 */
 	public static int getCustomId(ItemStack itemstack) {
-		ItemMeta m = itemstack.getItemMeta();
-		
-		if (m == null || !m.hasLore()) {
-			return -1;
-		}
-		
-		List<String> l = m.getLore();
-		for (int i = 0; i < l.size(); i++) {
-			String s = l.get(i);
+		if (MaterialAPI.ENCHANTMENT_DATA) {
+			if (!itemstack.containsEnchantment(EnchantmentCustom.DATA_ID)) {
+				return -1;
+			}
 			
-			if (s.contains(DATA_PREFIX)) {
-				return Integer.valueOf(s.replace(DATA_PREFIX, ""));
+			return itemstack.getEnchantmentLevel(EnchantmentCustom.DATA_ID);
+		} else {
+			ItemMeta m = itemstack.getItemMeta();
+		
+			if (m == null || !m.hasLore()) {
+				return -1;
+			}
+		
+			List<String> l = m.getLore();
+			for (int i = 0; i < l.size(); i++) {
+				String s = l.get(i);
+			
+				if (s.contains(DATA_PREFIX)) {
+					return Integer.valueOf(s.replace(DATA_PREFIX, ""));
+				}
 			}
 		}
 		
@@ -208,6 +219,10 @@ public class MaterialData {
 		return !isCustomBlock(block) ? null : getMaterialByCustomId(getCustomId(block));
 	}
 	
+	/**
+	 * Returns if the block is a custom one.
+	 * @param block The block.
+	 */
 	public static boolean isCustomBlock(Block block) {
 		return getCustomId(block) != -1;
 	}

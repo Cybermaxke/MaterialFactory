@@ -108,7 +108,7 @@ public class RecipeData {
 		List<?> recipes = (List<?>) ReflectionUtils.getFieldObject(Classes.NMS_CRAFTING_MANAGER, "recipes", craftmanager);
 		
 		for (Object obj : recipes) {			
-			if (!(boolean) ReflectionUtils.getMethodObject(Classes.NMS_IRECIPE, "a", new Class[] { Classes.NMS_INVENTORY_CRAFTING, Classes.NMS_WORLD }, obj, new Object[] { inc, null })) {
+			if (!((Boolean) ReflectionUtils.getMethodObject(boolean.class, Classes.NMS_IRECIPE, "a", new Class[] { Classes.NMS_INVENTORY_CRAFTING, Classes.NMS_WORLD }, obj, new Object[] { inc, null }))) {
 				continue;
 			}
 			
