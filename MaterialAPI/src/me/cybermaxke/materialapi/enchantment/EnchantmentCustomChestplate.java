@@ -46,6 +46,6 @@ public abstract class EnchantmentCustomChestplate extends EnchantmentCustomArmor
 
 	@Override
 	public EnchantmentTarget getItemTarget() {
-		return EnchantmentTarget.ARMOR_FEET;
+		return EnchantmentTarget.ARMOR_TORSO;
 	}
 }

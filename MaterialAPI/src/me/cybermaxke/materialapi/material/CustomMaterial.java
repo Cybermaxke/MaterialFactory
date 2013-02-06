@@ -33,14 +33,15 @@ import me.cybermaxke.materialapi.utils.InventoryUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
-public class CustomMaterial {
+public abstract class CustomMaterial {
 	private List<EnchantmentInstance> enchantments = new ArrayList<EnchantmentInstance>();
 	private List<String> lore = new ArrayList<String>();
 	
@@ -333,31 +334,17 @@ public class CustomMaterial {
 		return this;
 	}
 	
-	public void onHit(Player player, LivingEntity entity) {
-		
-	}
+	public abstract void onHit(EntityDamageByEntityEvent event);
 	
-	public void onInteract(Player player, Action action, Block block, BlockFace face) {
-		
-	}
+	public abstract void onInteract(PlayerInteractEvent event);
 	
-	public void onInteractEntity(Player player, LivingEntity entity) {
-		
-	}
+	public abstract void onInteractEntity(PlayerInteractEntityEvent event);
 	
-	public void onBlockPlaced(Player player, Block block) {
-		
-	}
+	public abstract void onBlockPlaced(BlockPlaceEvent event);
 	
-	public void onBlockBreak(Player player, Block block) {
-		
-	}
+	public abstract void onBlockBreak(BlockBreakEvent event);
 	
-	public void onBlockDamage(Player player, Block block) {
-		
-	}
+	public abstract void onBlockDamage(BlockDamageEvent event);
 	
-	public void onBlockInteract(Player player, Block block) {
-		
-	}
+	public abstract void onBlockInteract(PlayerInteractEvent event);
 }

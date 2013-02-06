@@ -21,6 +21,9 @@
  */
 package me.cybermaxke.materialapi;
 
+import java.util.Map.Entry;
+
+import me.cybermaxke.materialapi.enchantment.EnchantmentCustom;
 import me.cybermaxke.materialapi.inventory.CustomItemStack;
 import me.cybermaxke.materialapi.map.RenderMapsTask;
 import me.cybermaxke.materialapi.material.MaterialData;
@@ -31,6 +34,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -88,7 +92,7 @@ public class PlayerListener implements Listener {
 			}
 			
 			MaterialData.setCustomBlockId(b, is.getMaterial().getCustomId());
-			is.getMaterial().onBlockPlaced(e.getPlayer(), b);
+			is.getMaterial().onBlockPlaced(e);
 		}
 	}
 	
@@ -103,13 +107,13 @@ public class PlayerListener implements Listener {
 		
 		if (MaterialData.isCustomBlock(b)) {
 			if (MaterialData.getMaterial(b) != null) {
-				MaterialData.getMaterial(b).onBlockBreak(p, b);
-
 				if (!p.getGameMode().equals(GameMode.CREATIVE)) {
 					b.setType(Material.AIR);
 					b.getWorld().dropItemNaturally(b.getLocation(), new CustomItemStack(MaterialData.getMaterial(b)));
 					e.setCancelled(true);
 				}
+				
+				MaterialData.getMaterial(b).onBlockBreak(e);
 			}
 		}
 	}
@@ -120,12 +124,11 @@ public class PlayerListener implements Listener {
 			return;
 		}
 		
-		Player p = e.getPlayer();
 		Block b = e.getBlock();
 		
 		if (MaterialData.isCustomBlock(b)) {
 			if (MaterialData.getMaterial(b) != null) {
-				MaterialData.getMaterial(b).onBlockDamage(p, b);
+				MaterialData.getMaterial(b).onBlockDamage(e);
 			}
 		}
 	}
@@ -175,13 +178,19 @@ public class PlayerListener implements Listener {
 		CustomItemStack is = new CustomItemStack(i);
 			
 		if (is.isCustomItem()) {
-			is.getMaterial().onInteract(p, e.getAction(), b, e.getBlockFace());
+			is.getMaterial().onInteract(e);
+			
+			for (Entry<Enchantment, Integer> en : is.getEnchantments().entrySet()) {
+				if (en.getKey() instanceof EnchantmentCustom) {
+					((EnchantmentCustom) en.getKey()).onInteract(e, is, en.getValue());
+				}
+			}
 		}
 		
 		if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if (MaterialData.isCustomBlock(b)) {
 				if (MaterialData.getMaterial(b) != null) {
-					MaterialData.getMaterial(b).onBlockInteract(p, b);
+					MaterialData.getMaterial(b).onBlockInteract(e);
 				}
 			}
 		}
@@ -215,7 +224,13 @@ public class PlayerListener implements Listener {
 				e.setDamage(is.getMaterial().getDamage());
 			}
 			
-			is.getMaterial().onHit(p, (LivingEntity) e.getEntity());
+			is.getMaterial().onHit(e);
+			
+			for (Entry<Enchantment, Integer> en : is.getEnchantments().entrySet()) {
+				if (en.getKey() instanceof EnchantmentCustom) {
+					((EnchantmentCustom) en.getKey()).onHit(e, is, en.getValue());
+				}
+			}
 		}
 	}
 	
@@ -235,7 +250,13 @@ public class PlayerListener implements Listener {
 		CustomItemStack is = new CustomItemStack(i);
 		
 		if (is.isCustomItem()) {
-			is.getMaterial().onInteractEntity(p, (LivingEntity) e.getRightClicked());
+			is.getMaterial().onInteractEntity(e);
+			
+			for (Entry<Enchantment, Integer> en : is.getEnchantments().entrySet()) {
+				if (en.getKey() instanceof EnchantmentCustom) {
+					((EnchantmentCustom) en.getKey()).onInteract(e, is, en.getValue());
+				}
+			}
 		}
 	}
 	

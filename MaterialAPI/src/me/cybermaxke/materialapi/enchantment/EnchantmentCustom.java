@@ -25,6 +25,9 @@ import java.lang.reflect.Field;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class EnchantmentCustom extends Enchantment {
@@ -61,6 +64,12 @@ public abstract class EnchantmentCustom extends Enchantment {
 	public abstract int getWeight();
 	
 	public abstract String getEnchantmentName();
+	
+	public abstract void onHit(EntityDamageByEntityEvent event, ItemStack item, int lvl);
+	
+	public abstract void onInteract(PlayerInteractEvent event, ItemStack item, int lvl);
+	
+	public abstract void onInteract(PlayerInteractEntityEvent event, ItemStack item, int lvl);
 
 	@Override
 	public String getName() {

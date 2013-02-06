@@ -26,6 +26,7 @@ import me.cybermaxke.materialapi.utils.ReflectionUtils;
 
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class EnchantmentCustomArmor extends EnchantmentCustom {
@@ -51,4 +52,6 @@ public abstract class EnchantmentCustomArmor extends EnchantmentCustom {
 	}
 	
 	public abstract void onTick(Player player, ItemStack item, int lvl);
+	
+	public abstract void onDefend(EntityDamageByEntityEvent event, ItemStack item, int lvl);
 }

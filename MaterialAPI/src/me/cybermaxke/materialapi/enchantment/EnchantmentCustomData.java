@@ -23,6 +23,9 @@ package me.cybermaxke.materialapi.enchantment;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class EnchantmentCustomData extends EnchantmentCustom {
@@ -64,5 +67,20 @@ public class EnchantmentCustomData extends EnchantmentCustom {
 	@Override
 	public String getEnchantmentName() {
 		return null;
+	}
+
+	@Override
+	public void onHit(EntityDamageByEntityEvent e, ItemStack item, int lvl) {
+
+	}
+
+	@Override
+	public void onInteract(PlayerInteractEvent e, ItemStack item, int lvl) {
+
+	}
+
+	@Override
+	public void onInteract(PlayerInteractEntityEvent e, ItemStack item, int lvl) {
+
 	}
 }
