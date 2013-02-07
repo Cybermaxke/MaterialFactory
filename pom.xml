@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cybermaxke</groupId>
+	<artifactId>materialapi</artifactId>
+	<version>2.0</version>
+	<name>MaterialAPI</name>
+	<description>This api makes it possible to create custom items with each a unique id.</description>
+	
+	<properties>
+		<BukkitVersion>1.4.7-R1.0</BukkitVersion>
+		<ProtocolLibVersion>2.2.0</ProtocolLibVersion>
+	</properties>
+  
+	<repositories>
+		<repository>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/groups/public/</url>
+		</repository>
+		
+		<repository>
+			<id>comphenix-rep</id>
+			<name>Comphenix Repository</name>
+			<url>http://repo.comphenix.net/content/groups/public</url>
+		</repository>
+	</repositories>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>${BukkitVersion}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.comphenix.protocol</groupId>
+			<artifactId>ProtocolLib</artifactId>
+			<version>${ProtocolLibVersion}</version>
+		</dependency>
+	</dependencies>
+</project>

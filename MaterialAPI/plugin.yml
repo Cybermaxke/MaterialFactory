@@ -1,6 +1,0 @@
-name: MaterialAPI
-main: me.cybermaxke.materialapi.MaterialAPI
-version: 1.2
-description: Adds the ability to create new items!
-author: Cybermaxke
-softdepend: [ProtocolLib]
