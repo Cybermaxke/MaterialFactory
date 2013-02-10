@@ -83,6 +83,16 @@ public class CustomItemStack extends ItemStack {
 			this.material = MaterialData.getMaterialByCustomId(MaterialData.getCustomId(itemstack));
 		}
 	}
+	
+	/**
+	 * Creating a custom itemstack from a custom material.
+	 * @param material The material.
+	 * @param amount The amount.
+	 */
+	public CustomItemStack(CustomMaterial material, int amount) {
+		this(material);
+		this.setAmount(amount);
+	}
 
 	/**
 	 * Creating a custom itemstack from a custom material.

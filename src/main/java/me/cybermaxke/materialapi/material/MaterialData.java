@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import me.cybermaxke.chunkdata.ChunkDataAPI;
+
 import me.cybermaxke.materialapi.MaterialAPI;
 import me.cybermaxke.materialapi.enchantment.EnchantmentCustom;
 
@@ -35,15 +37,13 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 /**
  * Managing all the custom materials and ids.
  */
 public class MaterialData {
-	private static Plugin plugin;
+	//private static Plugin plugin;
 	
 	private static File dataFolder;
 	private static File dataFile;
@@ -58,7 +58,7 @@ public class MaterialData {
 	private static Map<Integer, String> matDataById = new HashMap<Integer, String>();
 
 	public MaterialData(Plugin plugin) {
-		MaterialData.plugin = plugin;
+		//MaterialData.plugin = plugin;
 		dataFolder = plugin.getDataFolder();
 		dataFile = new File(dataFolder + File.separator + "MaterialData.yml");
 		load();
@@ -235,8 +235,14 @@ public class MaterialData {
 	 * @return The block.
 	 */
 	public static Block setCustomBlockId(Block block, int id) {
-		FixedMetadataValue v = new FixedMetadataValue(plugin, id);
-		block.setMetadata(DATA_PATH, v);
+		ChunkDataAPI c = MaterialAPI.getChunkData();
+		
+		if (id == -1) {
+			c.getBlockData(block).remove(DATA_PATH);
+		} else {
+			c.getBlockData(block).setObject(DATA_PATH, id);
+		}
+		
 		return block;
 	}
 	
@@ -245,12 +251,8 @@ public class MaterialData {
 	 * @param block The block.
 	 * @return The custom id.
 	 */
-	public static int getCustomId(Block block) {	
-		if (!block.hasMetadata(DATA_PATH)) {
-			return -1;
-		}
-		
-		List<MetadataValue> v = block.getMetadata(DATA_PATH);
-		return v.get(0).asInt();
+	public static int getCustomId(Block block) {
+		ChunkDataAPI c = MaterialAPI.getChunkData();
+		return c.getBlockData(block).hasKey(DATA_PATH) ? c.getBlockData(block).getObject(Integer.class, DATA_PATH) : -1;
 	}
 }

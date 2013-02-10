@@ -44,6 +44,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -69,6 +70,23 @@ public class PlayerListener implements Listener {
 		if (!this.firstLogin) {
 			new RenderMapsTask(this.plugin, 13);
 			this.firstLogin = true;
+		}
+	}
+	
+	@EventHandler
+    public void onEntityExplode(EntityExplodeEvent e) {
+		if (e.isCancelled()) {
+			return;
+		}
+		
+		for (int i = 0; i < e.blockList().size(); i++) {
+			Block b = e.blockList().get(i);
+			
+			if (MaterialData.isCustomBlock(b) && MaterialData.getMaterial(b) != null) {
+				e.blockList().remove(b);		
+				b.setType(Material.AIR);		
+				b.getWorld().dropItem(b.getLocation(), new CustomItemStack(MaterialData.getMaterial(b)));
+			}
 		}
 	}
 	
@@ -114,6 +132,7 @@ public class PlayerListener implements Listener {
 				}
 				
 				MaterialData.getMaterial(b).onBlockBreak(e);
+				MaterialData.setCustomBlockId(e.getBlock(), -1);
 			}
 		}
 	}

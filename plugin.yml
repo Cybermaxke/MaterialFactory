@@ -1,0 +1,7 @@
+name: MaterialAPI
+main: me.cybermaxke.materialapi.MaterialAPI
+version: 2.0
+description: This api makes it possible to create custom items with each a unique id.
+author: Cybermaxke
+softdepend: [ProtocolLib]
+load: startup

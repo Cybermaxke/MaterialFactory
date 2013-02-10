@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import me.cybermaxke.chunkdata.ChunkDataAPI;
 import me.cybermaxke.materialapi.map.MapData;
 import me.cybermaxke.materialapi.material.MaterialData;
 import me.cybermaxke.materialapi.recipe.RecipeData;
@@ -36,11 +37,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class MaterialAPI extends JavaPlugin {
 	private String version = "v1.4.6";
+	private static MaterialAPI instance;
+	private static ChunkDataAPI chunkData;
 	
 	public static boolean ENCHANTMENT_DATA = false;
 
 	@Override
 	public void onEnable() {
+		instance = this;
+		chunkData = new ChunkDataAPI(this);
+		
 		String pack = this.getServer().getClass().getPackage().getName();
    		this.version = pack.substring(pack.lastIndexOf('.') + 1).replace("_", ".");
    		
@@ -69,8 +75,6 @@ public class MaterialAPI extends JavaPlugin {
 		this.getLogger().log(Level.INFO, "The api is loaded.");
 	}
 	
-	
-	
 	@Override
 	public void onDisable() {
 		MaterialData.save();
@@ -98,7 +102,7 @@ public class MaterialAPI extends JavaPlugin {
 		}
 		
 		c = YamlConfiguration.loadConfiguration(f);
-		c.getBoolean("EnchantmentHoldId");
+		ENCHANTMENT_DATA = c.getBoolean("EnchantmentHoldId");
 	}
 	
 	public String getCraftbukkitPackage() {
@@ -107,5 +111,13 @@ public class MaterialAPI extends JavaPlugin {
 	
 	public String getNMSPackage() {
 		return "net.minecraft.server." + (this.version.replace(".", "_"));
+	}
+	
+	public static MaterialAPI getInstance() {
+		return instance;
+	}
+	
+	public static ChunkDataAPI getChunkData() {
+		return chunkData;
 	}
 }
