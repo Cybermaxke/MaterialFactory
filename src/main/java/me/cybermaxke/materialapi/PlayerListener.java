@@ -50,6 +50,7 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.FurnaceInventory;
@@ -283,5 +284,25 @@ public class PlayerListener implements Listener {
 	public void onPrepareItemCraft(PrepareItemCraftEvent e) {
 		CraftingInventory inv = e.getInventory();
 		inv.setResult(RecipeData.getItem(inv));
+	}
+	
+	@EventHandler
+	public void onItemHeld(PlayerItemHeldEvent e) {
+		if(e.isCancelled()) {
+			return;
+		}
+		
+		Player p = e.getPlayer();
+		ItemStack i = p.getInventory().getItem(e.getNewSlot());
+		
+		if (i == null) {
+			return;
+		}
+		
+		CustomItemStack is = new CustomItemStack(i);
+		
+		if(is.isCustomItem()) {
+			is.getMaterial().onHold(e);
+		}
 	}
 }
