@@ -7,7 +7,7 @@
 	<description>This api makes it possible to create custom items with each a unique id.</description>
 	
 	<properties>
-		<BukkitVersion>1.4.7-R1.0</BukkitVersion>
+		<BukkitVersion>1.5.1-R0.1-SNAPSHOT</BukkitVersion>
 		<ProtocolLibVersion>2.2.0</ProtocolLibVersion>
 	</properties>
   
