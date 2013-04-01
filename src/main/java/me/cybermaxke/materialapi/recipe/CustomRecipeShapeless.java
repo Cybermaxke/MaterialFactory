@@ -42,11 +42,11 @@ public class CustomRecipeShapeless implements CustomRecipe {
 	public CustomRecipeShapeless(CustomItemStack result) {
 		this.result = result;
 	}
-	
+
 	public void addIngedients(CustomItemStack... ingredients) {
 		this.items.addAll(Arrays.asList(ingredients));
 	}
-	
+
 	@Override
 	public CustomItemStack getResult() {
 		return new CustomItemStack(this.result.getItem().clone());
@@ -60,20 +60,20 @@ public class CustomRecipeShapeless implements CustomRecipe {
 	@Override
 	public Recipe getBukkitRecipe() {
 		ShapelessRecipe recipe = new ShapelessRecipe(this.result.getItem());
-		    
+
 		for (CustomItemStack stack : this.items) {
 			if (stack != null) {
 				recipe.addIngredient(stack.getType(), stack.getDurability());
 			}
 		}
-		
+
 		return recipe;
 	}
 
 	@Override
 	public boolean matches(Inventory inventory) {
 		List<CustomItemStack> l = new ArrayList<CustomItemStack>(this.items);
-		
+
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				CustomItemStack is = InventoryUtils.getStackInRowAndColumn(inventory, i, j);
@@ -81,24 +81,23 @@ public class CustomRecipeShapeless implements CustomRecipe {
 				if (is != null) {
 					boolean f = false;
 					Iterator<CustomItemStack> iter = l.iterator();
-					
+
 					while (iter.hasNext()) {
 						CustomItemStack is2 = (CustomItemStack) iter.next();
-						
+
 						if (InventoryUtils.doItemsMatch(is, is2)) {
 							f = true;
 							l.remove(is2);
 							break;
 						}
 					}
-					
+
 					if (!f) {
 						return false;
 					}
 				}
 			}
 		}
-		
 		return l.isEmpty();
 	}
 

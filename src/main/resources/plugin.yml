@@ -3,5 +3,4 @@ main: ${MainClass}
 version: ${project.version}
 description: ${project.description}
 author: ${Author}
-softdepend: [${Depends}]
 load: startup

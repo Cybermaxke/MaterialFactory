@@ -34,7 +34,7 @@ import org.bukkit.map.MapView;
  */
 public class ImageMapRenderer extends MapRenderer {
 	private BufferedImage img;
-	
+
 	public ImageMapRenderer(BufferedImage image) {
 		this.img = image;
 	}
@@ -43,7 +43,7 @@ public class ImageMapRenderer extends MapRenderer {
 	public void render(MapView view, MapCanvas canvas, Player player) {
 		if (this.img != null) {
 			canvas.drawImage(0, 0, this.img);
-			
+
 			/**
 			 * Removing the cursors is broken?
 			 */

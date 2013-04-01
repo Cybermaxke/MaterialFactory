@@ -89,8 +89,8 @@ public class CustomItemStack {
 		this(itemstack.getType(), itemstack.getAmount(), (short) itemstack.getDurability());
 		this.setItemMeta(itemstack.getItemMeta());
 
-		this.setTag(TagUtils.getTag(itemstack));
-		TagCompound tag = this.getTag();
+		TagCompound tag = TagUtils.getTag(itemstack);
+		this.setTag(tag);
 		if (tag != null && tag.hasKey(MaterialData.DATA_PATH)) {
 			this.material = MaterialData.getMaterialByCustomId(tag.getInteger(MaterialData.DATA_PATH));
 		}
@@ -321,7 +321,7 @@ public class CustomItemStack {
 
 		return null;
 	}
-	
+
 	/**
 	 * Sets the color of a item if its dyeable.
 	 * @param color The bukkit color.

@@ -18,7 +18,7 @@ public class ChunkData {
 		this.tag = new TagCompound();
 		return this;
 	}
-	
+
 	public ChunkData clone() {
 		return new ChunkData().setTag(this.tag.clone());
 	}

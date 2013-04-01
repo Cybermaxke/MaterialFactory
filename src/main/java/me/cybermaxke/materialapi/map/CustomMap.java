@@ -39,16 +39,16 @@ public class CustomMap {
 		this.map = MapData.addMapData(id);
 		MapData.addMap(this);
 	}
-	
+
 	public CustomMap(String id, File file) {
 		this(id, ImageUtils.getResizedImage(file));
 	}
-	
+
 	public CustomMap(String id, BufferedImage image) {
 		this(id);
 		this.image = image;
 	}
-	
+
 	/**
 	 * Returns the id of the map.
 	 * @return The id.
@@ -56,7 +56,7 @@ public class CustomMap {
 	public String getId() {
 		return this.id.toLowerCase();
 	}
-	
+
 	/**
 	 * Returns the bukkit map view.
 	 * @return The map view.
@@ -64,7 +64,7 @@ public class CustomMap {
 	public MapView getMapView() {
 		return this.map;
 	}
-	
+
 	/**
 	 * Returns the bukkit map id.
 	 * @return The id.
@@ -72,7 +72,7 @@ public class CustomMap {
 	public short getMapId() {
 		return this.map.getId();
 	}
-	
+
 	/**
 	 * Rendering the map with a image.
 	 * @param image The image.
@@ -82,7 +82,7 @@ public class CustomMap {
 		this.map.addRenderer(new ImageMapRenderer(image));
 		return this;
 	}
-	
+
 	/**
 	 * Rendering the map with a image from a file.
 	 * @param file The file.
@@ -90,7 +90,7 @@ public class CustomMap {
 	public CustomMap renderImage() {
 		return this.image != null ? this.renderImage(this.image) : this;
 	}
-	
+
 	/**
 	 * Rendering the map with the current image.
 	 * @param file The file.
@@ -98,8 +98,7 @@ public class CustomMap {
 	public CustomMap renderImage(File file) {
 		return this.renderImage(ImageUtils.getResizedImage(file));
 	}
-	
-	
+
 	/**
 	 * Applying the map to a itemstack.
 	 * @param itemstack The itemstack.

@@ -45,19 +45,19 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 public abstract class CustomMaterial {
 	private List<EnchantmentInstance> enchantments = new ArrayList<EnchantmentInstance>();
 	private List<String> lore = new ArrayList<String>();
-	
+
 	private String name = null;
 	private String id = null;
 	private String skullOwner = null;
-	
+
 	private Color color = null;
 	private CustomMap map = null;
-	
+
 	private int minecraftId = 0;
 	private int customId = 1000;
 	private int damage = -1;
 	private byte data = -1;
-	
+
 	private boolean canPlace = true;
 
 	public CustomMaterial(String id, int minecraftId, byte data) {
@@ -67,19 +67,19 @@ public abstract class CustomMaterial {
 		this.customId = MaterialData.addMaterialData(this);
 		MaterialData.addMaterial(this);
 	}
-	
+
 	public CustomMaterial(String id, int minecraftId) {
 		this(id, minecraftId, (byte) -1);
 	}
-	
+
 	public CustomMaterial(String id, Material material, byte data) {
 		this(id, material.getId(), data);
 	}
-	
+
 	public CustomMaterial(String id, Material material) {
 		this(id, material.getId());
 	}
-	
+
 	/**
 	 * Returns the display name of the material, 'null' if it was never changed.
 	 * @return The name.
@@ -87,7 +87,7 @@ public abstract class CustomMaterial {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * Sets the display name of the material.
 	 * @param name The name.
@@ -96,7 +96,7 @@ public abstract class CustomMaterial {
 		this.name = ChatColor.WHITE + name;
 		return this;
 	}
-	
+
 	/**
 	 * Returns the minecraft block/item id.
 	 * @return
@@ -104,7 +104,7 @@ public abstract class CustomMaterial {
 	public int getMinecraftId() {
 		return this.minecraftId;
 	}
-	
+
 	/**
 	 * Sets the minecraft block/item id.
 	 * @param id The id.
@@ -113,7 +113,7 @@ public abstract class CustomMaterial {
 		this.minecraftId = id;
 		return this;
 	}
-	
+
 	/**
 	 * Returns the bukkit material.
 	 * @return The material.
@@ -121,7 +121,7 @@ public abstract class CustomMaterial {
 	public Material getType() {
 		return Material.getMaterial(this.minecraftId);
 	}
-	
+
 	/**
 	 * Sets the bukkit material.
 	 * @param material The material.
@@ -129,7 +129,7 @@ public abstract class CustomMaterial {
 	public CustomMaterial setType(Material material) {
 		return this.setMinecraftId(material.getId());
 	}
-	
+
 	/**
 	 * Returns the id.
 	 * @return
@@ -137,7 +137,7 @@ public abstract class CustomMaterial {
 	public String getId() {
 		return this.id;
 	}
-	
+
 	/**
 	 * Returns the custom id.
 	 * @return
@@ -145,7 +145,7 @@ public abstract class CustomMaterial {
 	public int getCustomId() {
 		return this.customId;
 	}
-	
+
 	/**
 	 * Returns the data value of the material.
 	 * @return The data value.
@@ -153,7 +153,7 @@ public abstract class CustomMaterial {
 	public byte getData() {
 		return this.data;
 	}
-	
+
 	/**
 	 * Sets the data value of the material.
 	 * @param data The data value.
@@ -162,7 +162,7 @@ public abstract class CustomMaterial {
 		this.data = data;
 		return this;
 	}
-	
+
 	/**
 	 * Returns the custom map the material is holding, 
 	 * 'null' if it's not a map or if it doesn't exist.
@@ -171,7 +171,7 @@ public abstract class CustomMaterial {
 	public CustomMap getMap() {
 		return this.getType().equals(Material.MAP) ? this.map : null;
 	}
-	
+
 	/**
 	 * Sets the custom map of the material.
 	 * @param map The map.
@@ -180,7 +180,7 @@ public abstract class CustomMaterial {
 		this.map = map;
 		return this;
 	}
-	
+
 	/**
 	 * Returns the custom damage, '-1' if it was never changed.
 	 * @return The damage.
@@ -188,7 +188,7 @@ public abstract class CustomMaterial {
 	public int getDamage() {
 		return this.damage;
 	}
-	
+
 	/**
 	 * Sets the default damage to a custom value.
 	 * @param damage The damage.
@@ -197,7 +197,7 @@ public abstract class CustomMaterial {
 		this.damage = damage;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the color of the material.
 	 * @param color The color.
@@ -206,7 +206,7 @@ public abstract class CustomMaterial {
 		this.color = color;
 		return this;
 	}
-	
+
 	/**
 	 * Returns the color of the material, 'null' if its not dyeable.
 	 * @return The color.
@@ -214,7 +214,7 @@ public abstract class CustomMaterial {
 	public Color getColor() {
 		return InventoryUtils.isLeather(this.getType()) ? this.color : null;
 	}
-	
+
 	/**
 	 * Sets the name of the skull owner.
 	 * @param name The name.
@@ -223,7 +223,7 @@ public abstract class CustomMaterial {
 		this.skullOwner = name;
 		return this;
 	}
-	
+
 	/**
 	 * Returns the name of the skull owner of the material, 'null' if it's not a skull.
 	 * @return The name.
@@ -231,7 +231,7 @@ public abstract class CustomMaterial {
 	public String getSkullOwner() {
 		return this.minecraftId != Material.SKULL_ITEM.getId() ? null : this.skullOwner;
 	}
-	
+
 	/**
 	 * Sets if the block can be placed by default.
 	 * @param can Can be placed.
@@ -240,7 +240,7 @@ public abstract class CustomMaterial {
 		this.canPlace = can;
 		return this;
 	}
-	
+
 	/**
 	 * Returns if the custom block can be placed on the given location.
 	 * @param location The location.
@@ -248,7 +248,7 @@ public abstract class CustomMaterial {
 	public boolean canPlace(Location location) {
 		return this.canPlace;
 	}
-	
+
 	/**
 	 * Adds a enchantment to the material.
 	 * @param enchantment The enchantment.
@@ -267,7 +267,7 @@ public abstract class CustomMaterial {
 		this.enchantments.add(enchantment);
 		return this;
 	}
-	
+
 	/**
 	 * Adds multiple enchantment instances at once.
 	 * @param enchantments The enchantments.
@@ -276,7 +276,7 @@ public abstract class CustomMaterial {
 		this.enchantments.addAll(Arrays.asList(enchantments));
 		return this;
 	}
-	
+
 	/**
 	 * Returns all the enchantment instances, 'null' if there don't exist any.
 	 * @return The enchantment instances.
@@ -284,7 +284,7 @@ public abstract class CustomMaterial {
 	public EnchantmentInstance[] getEnchantments() {
 		return this.enchantments.isEmpty() ? null : this.enchantments.toArray(new EnchantmentInstance[] {});
 	}
-	
+
 	/**
 	 * Returns all the lore added to the material.
 	 * @return The lore.
@@ -292,26 +292,26 @@ public abstract class CustomMaterial {
 	public String[] getLore() {
 		return this.lore.isEmpty() ? null : this.lore.toArray(new String[] {});
 	}
-	
+
 	/**
 	 * Sets all the lore, with clearing the old.
 	 * @param lore The lore.
 	 */
 	public CustomMaterial setLore(String... lore) {
 		this.lore = new ArrayList<String>();
-		
+
 		if (lore == null) {
 			return this;
 		}
-		
+
 		for (int i = 0; i < lore.length; i++) {
 			lore[i] = ChatColor.GRAY + lore[i];
 		}
-		
+
 		this.lore.addAll(Arrays.asList(lore));
 		return this;
 	}
-	
+
 	/**
 	 * Adds lore to the material.
 	 * @param lore The lore.
@@ -320,24 +320,24 @@ public abstract class CustomMaterial {
 		for (int i = 0; i < lore.length; i++) {
 			lore[i] = ChatColor.GRAY + lore[i];
 		}
-		
+
 		this.lore.addAll(Arrays.asList(lore));
 		return this;
 	}
-	
+
 	public abstract void onHit(EntityDamageByEntityEvent event);
-	
+
 	public abstract void onInteract(PlayerInteractEvent event);
-	
+
 	public abstract void onInteractEntity(PlayerInteractEntityEvent event);
-	
+
 	public abstract void onBlockPlaced(BlockPlaceEvent event);
-	
+
 	public abstract void onBlockBreak(BlockBreakEvent event);
-	
+
 	public abstract void onBlockDamage(BlockDamageEvent event);
-	
+
 	public abstract void onBlockInteract(PlayerInteractEvent event);
-	
+
 	public abstract void onHold(PlayerItemHeldEvent event);
 }

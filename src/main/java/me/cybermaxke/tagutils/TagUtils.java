@@ -214,12 +214,19 @@ public class TagUtils {
 	}
 
 	public static TagCompound getTag(ItemStack itemstack) {
-		NBTTagCompound t = CraftItemStack.asNMSCopy(itemstack).tag;
+		net.minecraft.server.v1_5_R2.ItemStack is = CraftItemStack.asNMSCopy(itemstack);
+		if (is == null) {
+			return null;
+		}
+		NBTTagCompound t = is.tag;
 		return (TagCompound) (t == null ? null : createTag(t));
 	}
 
 	public static ItemStack setTag(ItemStack itemstack, TagCompound tag) {
 		net.minecraft.server.v1_5_R2.ItemStack is = CraftItemStack.asNMSCopy(itemstack);
+		if (is == null) {
+			return itemstack;
+		}
 		is.tag = (NBTTagCompound) (tag == null ? null : createTag(tag));
 		return CraftItemStack.asCraftMirror(is);
 	}

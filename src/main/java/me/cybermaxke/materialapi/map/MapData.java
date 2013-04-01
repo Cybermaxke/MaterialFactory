@@ -37,22 +37,22 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class MapData {
 	private static Plugin plugin;
-	
+
 	private static File dataFolder;
 	private static File dataFile;
-	
+
 	private static Map<String, CustomMap> byId = new HashMap<String, CustomMap>();
 	private static Map<Short, CustomMap> byMapId = new HashMap<Short, CustomMap>();
 	private static Map<String, Short> mapDataById = new HashMap<String, Short>();
 	private static Map<Short, String> mapData = new HashMap<Short, String>();
-	
+
 	public MapData(JavaPlugin plugin) {
 		MapData.plugin = plugin;
 		dataFolder = plugin.getDataFolder();
 		dataFile = new File(dataFolder + File.separator + "MapData.yml");
 		load();
 	}
-	
+
 	/**
 	 * Returns all the maps added to the data.
 	 * @return The maps.
@@ -60,7 +60,7 @@ public class MapData {
 	public static CustomMap[] getMaps() {
 		return byId.isEmpty() ? null : byId.values().toArray(new CustomMap[] {});
 	}
-	
+
 	/**
 	 * Creating or getting the bukkit map.
 	 * @param id The id of your custom map.
@@ -69,18 +69,18 @@ public class MapData {
 	public static MapView addMapData(String id) {
 		if (mapDataById.containsKey(id.toLowerCase())) {
 			short i = mapDataById.get(id.toLowerCase());
-			
+
 			if (plugin.getServer().getMap(i) != null) {
 				return plugin.getServer().getMap(i);
 			}
 		}
-		
+
 		MapView m = plugin.getServer().createMap(plugin.getServer().getWorlds().get(0));
 		mapDataById.put(id.toLowerCase(), m.getId());
 		mapData.put(m.getId(), id.toLowerCase());
 		return m;
 	}
-	
+
 	/**
 	 * Adding a custom map to the data to be able to use it.
 	 * @param map The map.
@@ -90,17 +90,17 @@ public class MapData {
 		byMapId.put(map.getMapId(), map);
 		return map;
 	}
-	
+
 	/**
 	 * Saving all the data to the config file.
 	 */
 	public static void save() {
 		YamlConfiguration c = new YamlConfiguration();
-		
+
 		if (!dataFolder.exists()) {
 			dataFolder.mkdirs();
 		}
-		
+
 		if (!dataFile.exists()) {
 			try {
 				dataFile.createNewFile();
@@ -110,18 +110,18 @@ public class MapData {
 		} else {
 			c = YamlConfiguration.loadConfiguration(dataFile);
 		}
-		
+
 		for (Entry<String, Short> d : mapDataById.entrySet()) {
 			c.set(d.getKey(), d.getValue() + "");
 		}
-		
+
 		try {
 			c.save(dataFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Loading all the data from a config file.
 	 */
@@ -129,9 +129,8 @@ public class MapData {
 		if (!dataFolder.exists() || !dataFile.exists()) {
 			return;
 		}
-		
-		YamlConfiguration c = YamlConfiguration.loadConfiguration(dataFile);
 
+		YamlConfiguration c = YamlConfiguration.loadConfiguration(dataFile);
 		for (Entry<String, Object> d : c.getValues(false).entrySet()) {
 			mapDataById.put(d.getKey(), Short.valueOf((String) d.getValue()));
 			mapData.put(Short.valueOf((String) d.getValue()), d.getKey());

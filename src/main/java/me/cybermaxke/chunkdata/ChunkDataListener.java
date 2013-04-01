@@ -39,7 +39,7 @@ public class ChunkDataListener implements Listener {
 		api.getPlugin().getServer().getPluginManager().registerEvents(this, api.getPlugin());
 		this.api = api;
 	}
-	
+
 	@EventHandler
 	public void onWorldUnload(WorldUnloadEvent e) {
 		for (Chunk c : e.getWorld().getLoadedChunks()) {
@@ -50,12 +50,12 @@ public class ChunkDataListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent e) {
 		this.api.loadData(e.getWorld());
 	}
-	
+
 	@EventHandler
 	public void onChunkUnload(ChunkUnloadEvent e) {
 		try {
@@ -64,7 +64,7 @@ public class ChunkDataListener implements Listener {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	@EventHandler
 	public void onPluginDisable(PluginDisableEvent e) {
 		if (e.getPlugin().getName().equals(this.api.getPlugin().getName())) {

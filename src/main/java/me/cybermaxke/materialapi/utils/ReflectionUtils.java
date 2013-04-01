@@ -32,10 +32,10 @@ public class ReflectionUtils {
 			f.setAccessible(true);
 			return f.get(object);
 		} catch (Exception ex) {} 
-		
+
 		return null;
 	}
-	
+
 	public static void setFieldObject(Class<?> clazz, String field, Object object, Object newObj) {	
 		try {
 			Field f = clazz.getDeclaredField(field);
@@ -43,7 +43,7 @@ public class ReflectionUtils {
 			f.set(object, newObj);
 		} catch (Exception ex) {}
 	}
-	
+
 	public static void invokeMethod(Class<?> clazz, String method, Class<?>[] args, Object object, Object[] objects) {
 		try {
 			Method m = clazz.getDeclaredMethod(method, args);
@@ -51,12 +51,12 @@ public class ReflectionUtils {
 			m.invoke(object, objects);
 		} catch (Exception ex) {}
 	}
-	
+
 	public static <T> Object getMethodObject(Class<? extends T> type, Class<?> clazz, String method, Class<?>[] args, Object object, Object[] objects) {
 		Object o = getMethodObject(clazz, method, args, object, objects);
 		return o == null ? null : type.cast(o);
 	}
-	
+
 	public static Object getMethodObject(Class<?> clazz, String method, Class<?>[] args, Object object, Object[] objects) {
 		try {
 			Method m = clazz.getDeclaredMethod(method, args);
@@ -66,11 +66,11 @@ public class ReflectionUtils {
 		
 		return null; 
 	}
-	
+
 	public static Object getMethodObject(Class<?> clazz, String method, Object object) {
 		return getMethodObject(clazz, method, new Class[] {}, object, new Object[] {});
 	}
-	
+
 	public static Object newInstance(Class<?> clazz, Class<?>[] args, Object[] objects) {
 		try {
 			return clazz.getConstructor(args).newInstance(objects);

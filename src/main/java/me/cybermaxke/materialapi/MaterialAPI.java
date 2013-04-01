@@ -44,9 +44,9 @@ public class MaterialAPI extends JavaPlugin {
 
 		String pack = this.getServer().getClass().getPackage().getName();
    		this.version = pack.substring(pack.lastIndexOf('.') + 1).replace("_", ".");
-   
+
    		new ArmorTask(this);
-		new PlayerListener(this);
+   		new PlayerListener(this);
 		new Classes(this);
 		new MaterialData(this);
 		new MapData(this);
@@ -62,7 +62,7 @@ public class MaterialAPI extends JavaPlugin {
 
 		this.getLogger().log(Level.INFO, "The api is loaded.");
 	}
-	
+
 	@Override
 	public void onDisable() {
 		MaterialData.save();
@@ -73,14 +73,14 @@ public class MaterialAPI extends JavaPlugin {
 	public void loadConfig() {		
 		File f = new File(this.getDataFolder(), "Config.yml");
 		YamlConfiguration c = null;
-		
+
 		if (!this.getDataFolder().exists()) {
 			this.getDataFolder().mkdirs();
 		}
-		
+
 		if (!f.exists()) {
 			c = new YamlConfiguration();
-			
+
 			try {
 				f.createNewFile();
 				c.save(f);
@@ -88,23 +88,23 @@ public class MaterialAPI extends JavaPlugin {
 				e.printStackTrace();
 			}
 		}
-		
+
 		c = YamlConfiguration.loadConfiguration(f);
 	}
 	*/
-	
+
 	public String getCraftbukkitPackage() {
 		return "org.bukkit.craftbukkit." + (this.version.replace(".", "_"));
 	}
-	
+
 	public String getNMSPackage() {
 		return "net.minecraft.server." + (this.version.replace(".", "_"));
 	}
-	
+
 	public static MaterialAPI getInstance() {
 		return instance;
 	}
-	
+
 	public static ChunkDataAPI getChunkData() {
 		return chunkData;
 	}

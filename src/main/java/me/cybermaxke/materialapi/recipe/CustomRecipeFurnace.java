@@ -34,21 +34,21 @@ public class CustomRecipeFurnace implements CustomRecipe {
 	private CustomItemStack result;
 	private CustomItemStack ingredient;
 	private int amount = 1;
-	
+
 	public CustomRecipeFurnace(CustomItemStack input, CustomItemStack result) {
 		this.ingredient = input;
 		this.result = result;
 		this.amount = 1;
 	}
-	
+
 	public CustomItemStack getInput() {
 		return this.ingredient;
 	}
-	
+
 	public CustomItemStack getResult() {
 		return new CustomItemStack(this.result.getItem().clone());
 	}
-	
+
 	public int getAmount() {
 		return this.amount;
 	}

@@ -27,7 +27,7 @@ public class Classes {
 	public static Class<?> CB_CRAFT_ITEMSTACK;
 	public static Class<?> CB_CRAFT_INVENTORY;
 	public static Class<?> CB_CRAFT_METAITEM;
-	
+
 	public static Class<?> NMS_INVENTORY_CRAFTING;
 	public static Class<?> NMS_CRAFTING_MANAGER;
 	public static Class<?> NMS_IRECIPE;

@@ -44,17 +44,17 @@ public class CustomRecipeShaped implements CustomRecipe {
 	public CustomRecipeShaped(CustomItemStack result) {
 		this.result = result;
 	}
-	
+
 	public void setShape(CustomItemStack[]... cs) {
 		List<CustomItemStack> items = new ArrayList<CustomItemStack>();
 		this.height = cs.length;
-		
+
 		for (CustomItemStack[] it : cs) {
 			if (it.length > this.width) {
 				this.width = it.length;
 			}
 		}
-		
+
 		for (CustomItemStack[] it : cs) {
 			CustomItemStack[] is = new CustomItemStack[this.width];
 
@@ -64,7 +64,7 @@ public class CustomRecipeShaped implements CustomRecipe {
 
 			if (it.length < this.width) {
 				int i = this.width - it.length;
-				
+
 				for (int n = 0; n < i; n++) {
 					is[i] = null;
 				}
@@ -143,10 +143,10 @@ public class CustomRecipeShaped implements CustomRecipe {
 			if (stack != null) {
 				recipe.setIngredient(c, stack.getType(), stack.getDurability());
 			}
-			
+
 			c = (char)(c + '\001');
 		}
-		
+
 		return recipe;
 	}
 
@@ -156,7 +156,7 @@ public class CustomRecipeShaped implements CustomRecipe {
 				int i1 = k - i;
 				int j1 = l - j;
 				CustomItemStack is = null;
-				
+
 				if ((i1 >= 0) && (j1 >= 0) && (i1 < this.width) && (j1 < this.height)) {
 					if (flag) {
 						is = this.items[(this.width - i1 - 1 + j1 * this.width)];
@@ -171,7 +171,7 @@ public class CustomRecipeShaped implements CustomRecipe {
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -182,13 +182,12 @@ public class CustomRecipeShaped implements CustomRecipe {
 				if (this.checkMatch(inventory, i, j, true)) {
 					return true;
 				}
-				
+
 				if (this.checkMatch(inventory, i, j, false)) {
 					return true;
 				}
 			}
 		}
-		
 		return false;
 	}
 
