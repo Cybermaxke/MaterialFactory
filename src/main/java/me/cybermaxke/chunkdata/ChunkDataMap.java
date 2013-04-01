@@ -25,124 +25,118 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.cybermaxke.tagutils.Tag;
+import me.cybermaxke.tagutils.TagCompound;
+import me.cybermaxke.tagutils.TagUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-public class ChunkDataMap {
+public class ChunkDataMap extends ChunkData {
 	private File file;
 	private List<ChunkDataBlock> data =  new ArrayList<ChunkDataBlock>();
 	private int x, z;
 	private String world;
-	
+
 	public ChunkDataMap(File file, String world, int x, int z) {
 		this.file = file;
 		this.world = world;
 		this.x = x;
 		this.z = z;
 	}
-	
+
 	public ChunkDataMap(File file, World world, int x, int z) {
 		this(file, world.getName(), x, z);
 	}
-	
+
 	public ChunkDataMap(File file, Chunk chunk) {
 		this(file, chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
 	}
-	
+
 	public int getX() {
 		return this.x;
 	}
-	
+
 	public int getZ() {
 		return this.z;
 	}
-	
+
 	public World getWorld() {
 		return Bukkit.getWorld(this.world);
 	}
-	
+
 	public Chunk getChunk() {
 		return this.getWorld().getChunkAt(this.x, this.z);
 	}
-	
+
 	public ChunkDataBlock getData(int x, int y, int z) {
 		for (ChunkDataBlock d : this.data) {
 			if (d.getX() == x && d.getY() == y && d.getZ() == z) {
 				return d;
 			}
 		}
-		
+
 		ChunkDataBlock d = new ChunkDataBlock(x, y, z);
 		this.data.add(d);
 		return d;
 	}
-	
+
 	public ChunkDataBlock setData(ChunkDataBlock data) {
 		ChunkDataBlock old = this.getData(data.getX(), data.getY(), data.getZ());
 		this.data.remove(old);
 		this.data.add(data);
 		return data;
 	}
-	
+
 	public void save() throws IOException {
 		if (this.file.exists()) {
 			this.file.delete();
 		}
-		
-		this.file.createNewFile();
-		
-		YamlConfiguration c = YamlConfiguration.loadConfiguration(this.file);
-		c.set("World", this.world);
-		c.set("X", this.x);
-		c.set("Z", this.z);
-		
-		ConfigurationSection data = c.createSection("Data");
+
+		TagCompound tag = new TagCompound();
+		tag.setString("World", this.world);
+		tag.setInteger("X", this.x);
+		tag.setInteger("Z", this.z);
+		tag.setCompound("Tag", this.getTag());
+
+		TagCompound data = new TagCompound();
 		for (ChunkDataBlock d : this.data) {
-			ConfigurationSection cdata = data.createSection("X" + d.getX() + "Y" + d.getY() + "Z" + d.getZ());		
-			
-			cdata.set("X", d.getX());
-			cdata.set("Y", d.getY());
-			cdata.set("Z", d.getZ());
-			
-			for (String s : d.getKeys()) {
-				cdata.set("List." + s, d.getObject(s));
-			}
+			TagCompound t = new TagCompound();
+			t.setInteger("X", d.getX());
+			t.setInteger("Y", d.getY());
+			t.setInteger("Z", d.getZ());
+			t.setCompound("Tag", d.getTag());
+			data.setCompound("X" + d.getX() + "Y" + d.getY() + "Z" + d.getZ(), t);
 		}
-		
-		c.save(this.file);
+
+		tag.setCompound("Data", data);
+		TagUtils.save(this.file, tag);
 	}
-	
+
 	public static ChunkDataMap load(File file) {
-		YamlConfiguration c = YamlConfiguration.loadConfiguration(file);
-		
-		String world = c.getString("World");
-		int cx = c.getInt("X");
-		int cz = c.getInt("Z");
-		
+		TagCompound tag = (TagCompound) TagUtils.load(file);
+
+		String world = tag.getString("World");
+		int cx = tag.getInteger("X");
+		int cz = tag.getInteger("Z");
+		TagCompound t = tag.getCompound("Tag");
+
 		ChunkDataMap m = new ChunkDataMap(file, world, cx, cz);
-		
-		ConfigurationSection data = c.getConfigurationSection("Data");
-		if (data != null) {
-			for (String s : data.getKeys(false)) {
-				ConfigurationSection blockData = data.getConfigurationSection(s);
-				ConfigurationSection dataValues = blockData.getConfigurationSection("List");
-			
-				int x = blockData.getInt("X");
-				int y = blockData.getInt("Y");
-				int z = blockData.getInt("Z");
-			
-				ChunkDataBlock d = m.getData(x, y, z);
-		
-				if (dataValues != null) {
-					for (String s2 : dataValues.getKeys(false)) {
-						d.setObject(s2, dataValues.get(s2));
-					}
-				}
-			}
+		m.setTag(t);
+
+		TagCompound data = tag.getCompound("Data");
+		for (Tag<?> v : data.getValue().values()) {
+			TagCompound t2 = (TagCompound) v;
+
+			int x = t2.getInteger("X");
+			int y = t2.getInteger("Y");
+			int z = t2.getInteger("Z");
+
+			ChunkDataBlock d = m.getData(x, y, z);
+			d.setTag(t2.getCompound("Tag"));
 		}
+
 		return m;
 	}
 }

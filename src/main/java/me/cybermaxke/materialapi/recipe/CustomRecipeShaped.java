@@ -57,11 +57,11 @@ public class CustomRecipeShaped implements CustomRecipe {
 		
 		for (CustomItemStack[] it : cs) {
 			CustomItemStack[] is = new CustomItemStack[this.width];
-			
+
 			for (int i = 0; i < it.length; i++) {
 				is[i] = it[i];
 			}
-			
+
 			if (it.length < this.width) {
 				int i = this.width - it.length;
 				
@@ -69,7 +69,7 @@ public class CustomRecipeShaped implements CustomRecipe {
 					is[i] = null;
 				}
 			}
-			
+
 			items.addAll(Arrays.asList(is));
 		}
 
@@ -80,14 +80,14 @@ public class CustomRecipeShaped implements CustomRecipe {
 
 		this.bukkitrecipe = this.toBukkitRecipe();
 	}
-	
+
 	public int getSize() {
 		return this.height * this.width;
 	}
 
 	@Override
 	public CustomItemStack getResult() {
-		return new CustomItemStack(this.result.clone());
+		return new CustomItemStack(this.result.getItem().clone());
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class CustomRecipeShaped implements CustomRecipe {
 	}
 
 	private Recipe toBukkitRecipe() {
-		ShapedRecipe recipe = new ShapedRecipe(this.getResult());
-		
+		ShapedRecipe recipe = new ShapedRecipe(this.getResult().getItem());
+
 		switch (this.height) {
 			case 1:
 				switch (this.width) {

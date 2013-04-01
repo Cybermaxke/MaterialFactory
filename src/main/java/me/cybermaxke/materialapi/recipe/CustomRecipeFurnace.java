@@ -46,7 +46,7 @@ public class CustomRecipeFurnace implements CustomRecipe {
 	}
 	
 	public CustomItemStack getResult() {
-		return new CustomItemStack(this.result.clone());
+		return new CustomItemStack(this.result.getItem().clone());
 	}
 	
 	public int getAmount() {
@@ -60,7 +60,7 @@ public class CustomRecipeFurnace implements CustomRecipe {
 
 	@Override
 	public Recipe getBukkitRecipe() {
-		return new FurnaceRecipe(this.result, this.ingredient.getType(), this.ingredient.getDurability());
+		return new FurnaceRecipe(this.result.getItem(), this.ingredient.getType(), this.ingredient.getDurability());
 	}
 
 	@Override

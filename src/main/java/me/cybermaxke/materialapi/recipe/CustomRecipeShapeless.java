@@ -49,7 +49,7 @@ public class CustomRecipeShapeless implements CustomRecipe {
 	
 	@Override
 	public CustomItemStack getResult() {
-		return new CustomItemStack(this.result.clone());
+		return new CustomItemStack(this.result.getItem().clone());
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CustomRecipeShapeless implements CustomRecipe {
 
 	@Override
 	public Recipe getBukkitRecipe() {
-		ShapelessRecipe recipe = new ShapelessRecipe(this.result);
+		ShapelessRecipe recipe = new ShapelessRecipe(this.result.getItem());
 		    
 		for (CustomItemStack stack : this.items) {
 			if (stack != null) {

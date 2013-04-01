@@ -20,12 +20,7 @@
  */
 package me.cybermaxke.chunkdata;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-public class ChunkDataBlock {
-	private Map<String, Object> data = new HashMap<String, Object>();
+public class ChunkDataBlock extends ChunkData {
 	private int x, y, z;
 
 	public ChunkDataBlock(int x, int y, int z) {
@@ -33,67 +28,20 @@ public class ChunkDataBlock {
 		this.y = y;
 		this.z = z;
 	}
-	
+
 	public int getX() {
 		return this.x;
 	}
-	
+
 	public int getY() {
 		return this.y;
 	}
-	
+
 	public int getZ() {
 		return this.z;
 	}
-	
-	public ChunkDataBlock setObjects(Map<String, Object> objects) {
-		for (Entry<String, Object> e : objects.entrySet()) {
-			this.data.put(e.getKey(), e.getValue());
-		}
-		
-		return this;
-	}
-	
-	public Map<String, Object> getObjects() {
-		return this.data;
-	}
-	
-	public ChunkDataBlock setObject(String key, Object object) {
-		this.data.put(key, object);
-		return this;
-	}
-	
-	public ChunkDataBlock remove(String key) {
-		this.data.remove(key);
-		return this;
-	}
-	
-	public String[] getKeys() {
-		return this.data.keySet().toArray(new String[] {});
-	}
-	
-	public Object getObject(String key) {
-		return this.data.containsKey(key) ? this.data.get(key) : null;
-	}
-	
-	public boolean hasKey(String key) {
-		return this.data.containsKey(key);
-	}
-	
-	public <T> T getObject(Class<T> clazz, String key) {
-		return this.getObject(key) == null ? null : clazz.cast(this.getObject(key));
-	}
-	
-	public Integer getInt(String key) {
-		return this.getObject(Integer.class, key);
-	}
-	
-	public ChunkDataBlock clear() {
-		this.data.clear();
-		return this;
-	}
-	
+
 	public ChunkDataBlock clone() {
-		return new ChunkDataBlock(this.x, this.y, this.z).setObjects(this.data);
+		return (ChunkDataBlock) new ChunkDataBlock(this.x, this.y, this.z).setTag(this.getTag().clone());
 	}
 }

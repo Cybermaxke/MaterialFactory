@@ -2,13 +2,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cybermaxke</groupId>
 	<artifactId>materialapi</artifactId>
-	<version>2.0</version>
+	<version>2.1</version>
 	<name>MaterialAPI</name>
 	<description>This api makes it possible to create custom items with each a unique id.</description>
 	
 	<properties>
 		<BukkitVersion>1.5.1-R0.1-SNAPSHOT</BukkitVersion>
-		<ProtocolLibVersion>2.2.0</ProtocolLibVersion>
+		<Author>Cybermaxke</Author>
+		<MainClass>me.cybermaxke.materialapi.MaterialAPI</MainClass>
 	</properties>
   
 	<repositories>
@@ -16,25 +17,54 @@
 			<id>bukkit-repo</id>
 			<url>http://repo.bukkit.org/content/groups/public/</url>
 		</repository>
-		
-		<repository>
-			<id>comphenix-rep</id>
-			<name>Comphenix Repository</name>
-			<url>http://repo.comphenix.net/content/groups/public</url>
-		</repository>
 	</repositories>
 	
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
+			<artifactId>craftbukkit</artifactId>
 			<version>${BukkitVersion}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>com.comphenix.protocol</groupId>
-			<artifactId>ProtocolLib</artifactId>
-			<version>${ProtocolLibVersion}</version>
-		</dependency>
 	</dependencies>
+
+	<!-- Build configuration -->
+	<build>
+		<defaultGoal>clean package</defaultGoal>
+		<plugins>
+			<!-- Source compiler plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<!-- Adding resources to the base folder -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

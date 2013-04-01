@@ -250,25 +250,15 @@ public abstract class CustomMaterial {
 	}
 	
 	/**
-	 * Adds a enchantment to the material, it can be hidden.
-	 * @param enchantment The enchantment.
-	 * @param lvl The lvl.
-	 * @param visible If its visible on the item.
-	 */
-	public CustomMaterial addEnchantment(Enchantment enchantment, int lvl, boolean visible) {
-		this.addEnchantment(new EnchantmentInstance(enchantment, lvl, visible));
-		return this;
-	}
-	
-	/**
 	 * Adds a enchantment to the material.
 	 * @param enchantment The enchantment.
 	 * @param lvl The lvl.
 	 */
 	public CustomMaterial addEnchantment(Enchantment enchantment, int lvl) {
-		return this.addEnchantment(enchantment, lvl, true);
+		this.addEnchantment(new EnchantmentInstance(enchantment, lvl));
+		return this;
 	}
-	
+
 	/**
 	 * Adds a enchantment instance to the material.
 	 * @param enchantment
