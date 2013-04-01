@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import me.cybermaxke.chunkdata.ChunkDataAPI;
 import me.cybermaxke.materialapi.map.MapData;
 import me.cybermaxke.materialapi.material.MaterialData;
-import me.cybermaxke.materialapi.material.TestSword;
 import me.cybermaxke.materialapi.recipe.RecipeData;
 import me.cybermaxke.materialapi.utils.Classes;
 import me.cybermaxke.materialapi.utils.Metrics;
@@ -62,7 +61,6 @@ public class MaterialAPI extends JavaPlugin {
 		}
 
 		this.getLogger().log(Level.INFO, "The api is loaded.");
-		new TestSword("testsword");
 	}
 	
 	@Override
