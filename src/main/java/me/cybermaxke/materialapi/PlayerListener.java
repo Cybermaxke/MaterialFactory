@@ -48,6 +48,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -300,6 +301,24 @@ public class PlayerListener implements Listener {
 		CustomItemStack is = new CustomItemStack(i);
 		if(is.isCustomItem()) {
 			is.getMaterial().onHold(e);
+		}
+	}
+	
+	@EventHandler
+	public void onItemDrop(PlayerDropItemEvent e) {
+		if (e.isCancelled()) {
+			return;
+		}
+
+		ItemStack i  = e.getItemDrop().getItemStack();
+
+		if (i == null) {
+			return;
+		}
+
+		CustomItemStack is = new CustomItemStack(i);
+		if (is.isCustomItem()) {
+			is.getMaterial().onDrop(e);
 		}
 	}
 }

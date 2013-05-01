@@ -38,6 +38,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -340,4 +341,6 @@ public abstract class CustomMaterial {
 	public abstract void onBlockInteract(PlayerInteractEvent event);
 
 	public abstract void onHold(PlayerItemHeldEvent event);
+	
+	public abstract void onDrop(PlayerDropItemEvent event);
 }
