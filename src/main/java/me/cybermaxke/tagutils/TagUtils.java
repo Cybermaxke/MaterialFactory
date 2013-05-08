@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.server.v1_5_R2.*;
+import net.minecraft.server.v1_5_R3.*;
 
-import org.bukkit.craftbukkit.v1_5_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -183,14 +183,14 @@ public class TagUtils {
 	}
 
 	public static TagCompound getItemStackAsTag(ItemStack itemstack) {
-		net.minecraft.server.v1_5_R2.ItemStack is = CraftItemStack.asNMSCopy(itemstack);
+		net.minecraft.server.v1_5_R3.ItemStack is = CraftItemStack.asNMSCopy(itemstack);
 		NBTTagCompound c = is.save(new NBTTagCompound());
 		return (TagCompound) createTag(c);
 	}
 
 	public static ItemStack getItemStackFromTag(TagCompound tag) {
 		NBTTagCompound c = (NBTTagCompound) createTag(tag);
-		return CraftItemStack.asCraftMirror(net.minecraft.server.v1_5_R2.ItemStack.createStack(c));
+		return CraftItemStack.asCraftMirror(net.minecraft.server.v1_5_R3.ItemStack.createStack(c));
 	}
 
 	public static TagCompound getInventoryAsTag(Inventory inventory) {
@@ -214,7 +214,7 @@ public class TagUtils {
 	}
 
 	public static TagCompound getTag(ItemStack itemstack) {
-		net.minecraft.server.v1_5_R2.ItemStack is = CraftItemStack.asNMSCopy(itemstack);
+		net.minecraft.server.v1_5_R3.ItemStack is = CraftItemStack.asNMSCopy(itemstack);
 		if (is == null) {
 			return null;
 		}
@@ -223,7 +223,7 @@ public class TagUtils {
 	}
 
 	public static ItemStack setTag(ItemStack itemstack, TagCompound tag) {
-		net.minecraft.server.v1_5_R2.ItemStack is = CraftItemStack.asNMSCopy(itemstack);
+		net.minecraft.server.v1_5_R3.ItemStack is = CraftItemStack.asNMSCopy(itemstack);
 		if (is == null) {
 			return itemstack;
 		}
