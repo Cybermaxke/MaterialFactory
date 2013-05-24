@@ -10,6 +10,8 @@
 
 	<!-- Build properties -->
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<BukkitVersion>1.5.2-R0.1</BukkitVersion>
 		<Author>Cybermaxke</Author>
 		<MainClass>me.cybermaxke.materialapi.MaterialAPI</MainClass>
@@ -27,7 +29,7 @@
 	<repositories>
 		<repository>
 			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/</url>
+			<url>http://repo.bukkit.org/content/groups/public</url>
 		</repository>
 	</repositories>
 
@@ -46,7 +48,13 @@
 		<url>https://github.com/Cybermaxke/MaterialAPI/issues</url>
 	</issueManagement>
 
-	<!-- Build configuration -->
+	<!-- Build Server -->
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://81.165.56.159:8080/</url>
+	</ciManagement>
+
+	<!-- Build Configuration -->
 	<build>
 		<defaultGoal>clean install</defaultGoal>
 
