@@ -183,8 +183,8 @@ public class CustomItemStack {
 		}
 
 		TagCompound c = new TagCompound();
-		c.setInteger(ENCHANTMENTS_ID, enchantment.getId());
-		c.setInteger(ENCHANTMENTS_LVL, lvl);
+		c.setShort(ENCHANTMENTS_ID, (short) enchantment.getId());
+		c.setShort(ENCHANTMENTS_LVL, (short) lvl);
 		
 		tag.getList(ENCHANTMENTS).getValue().add(c);
 		this.setTag(tag);
@@ -229,8 +229,10 @@ public class CustomItemStack {
 		}
 
 		for (Tag<?> t : tag.getList(ENCHANTMENTS).getValue()) {
-			TagCompound c = (TagCompound) t;		
-			m.put(Enchantment.getById(c.getInteger(ENCHANTMENTS_ID)), c.getInteger(ENCHANTMENTS_LVL));
+			TagCompound c = (TagCompound) t;
+			Enchantment enchantment = Enchantment.getById(c.getShort(ENCHANTMENTS_ID));
+			int lvl = c.getShort(ENCHANTMENTS_LVL);
+			m.put(enchantment, lvl);
 		}
 
 		return m;
@@ -285,7 +287,8 @@ public class CustomItemStack {
 	}
 
 	public TagCompound getTag() {
-		return TagUtils.getTag(this.handle);
+		TagCompound tag = TagUtils.getTag(this.handle);
+		return tag != null ? tag  : new TagCompound();
 	}
 
 	public void setTag(TagCompound tag) {

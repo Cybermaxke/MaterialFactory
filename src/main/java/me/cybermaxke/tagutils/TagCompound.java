@@ -74,6 +74,10 @@ public final class TagCompound extends Tag<TagMap> {
 		this.set(key, new TagDouble(key, value));
 	}
 
+	public void setShort(String key, Short value) {
+		this.set(key, new TagShort(key, value));
+	}
+
 	public void setCompound(String key, TagCompound tag) {
 		this.getValue().put(key, tag);
 	}
@@ -132,6 +136,10 @@ public final class TagCompound extends Tag<TagMap> {
 
 	public TagList getList(String key) {
 		return this.get(TagList.class, key);
+	}
+
+	public Short getShort(String key) {
+		return this.getValue(Short.class, key);
 	}
 
 	public Set<Entry<String, Tag<?>>> entrySet() {
