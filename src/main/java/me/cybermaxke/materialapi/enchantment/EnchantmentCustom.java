@@ -60,14 +60,14 @@ public abstract class EnchantmentCustom extends Enchantment {
 		} catch (Exception ignored) {  }
 		
 		try {
-		      	Field f = Enchantment.class.getDeclaredField("acceptingNew");
-		      	f.setAccessible(true);
-		      	f.set(null, Boolean.valueOf(true));
+			Field f = Enchantment.class.getDeclaredField("acceptingNew");
+			f.setAccessible(true);
+			f.set(null, Boolean.valueOf(true));
 		      	
-		      	Enchantment.registerEnchantment(this);
-		      	Enchantment.stopAcceptingRegistrations();
+			Enchantment.registerEnchantment(this);
+			Enchantment.stopAcceptingRegistrations();
 		} catch (Exception e) {
-		    	e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
