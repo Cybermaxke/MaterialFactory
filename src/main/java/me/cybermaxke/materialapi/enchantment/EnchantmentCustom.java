@@ -41,14 +41,14 @@ public abstract class EnchantmentCustom extends Enchantment {
 		}
 		
 		try {
-	      	Field f = Enchantment.class.getDeclaredField("acceptingNew");
-	      	f.setAccessible(true);
-	      	f.set(null, Boolean.valueOf(true));
-	      	
-	      	Enchantment.registerEnchantment(this);
-	    } catch (Exception e) {
-	    	e.printStackTrace();
-	    }
+		      	Field f = Enchantment.class.getDeclaredField("acceptingNew");
+		      	f.setAccessible(true);
+		      	f.set(null, Boolean.valueOf(true));
+		      	
+		      	Enchantment.registerEnchantment(this);
+		} catch (Exception e) {
+		    	e.printStackTrace();
+		}
 	}
 
 	public abstract boolean canEnchantItem(ItemStack itemstack);
