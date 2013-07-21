@@ -46,6 +46,7 @@ public abstract class EnchantmentCustom extends Enchantment {
 		      	f.set(null, Boolean.valueOf(true));
 		      	
 		      	Enchantment.registerEnchantment(this);
+		      	Enchantment.stopAcceptingRegistrations();
 		} catch (Exception e) {
 		    	e.printStackTrace();
 		}
