@@ -41,6 +41,25 @@ public abstract class EnchantmentCustom extends Enchantment {
 		}
 		
 		try {
+			Field byIdField = Enchantment.class.getDeclaredField("byId");
+			Field byNameField = Enchantment.class.getDeclaredField("byName");
+					
+			byIdField.setAccessible(true);
+			byNameField.setAccessible(true);
+					
+			@SuppressWarnings("unchecked")
+			HashMap<Integer, Enchantment> byId = (HashMap<Integer, Enchantment>) byIdField.get(null);
+			@SuppressWarnings("unchecked")
+			HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) byNameField.get(null);
+					
+			if(byId.containsKey(id))
+				byId.remove(id);
+					
+			if(byName.containsKey(this.getName()))
+				byName.remove(this.getName());
+		} catch (Exception ignored) {  }
+		
+		try {
 		      	Field f = Enchantment.class.getDeclaredField("acceptingNew");
 		      	f.setAccessible(true);
 		      	f.set(null, Boolean.valueOf(true));
