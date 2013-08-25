@@ -1,24 +1,25 @@
 /**
  * 
- * This software is part of the ChunkDataAPI
+ * This software is part of the MaterialAPI
  * 
- * This api allows plugin developers to store custom data into blocks.
+ * This api allows plugin developers to create on a easy way custom
+ * items with a custom id and recipes depending on them.
  * 
- * ChunkDataAPI is free software: you can redistribute it and/or modify
+ * MaterialAPI is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or 
  * any later version.
  *  
- * ChunkDataAPI is distributed in the hope that it will be useful,
+ * MaterialAPI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ChunkDataAPI. If not, see <http://www.gnu.org/licenses/>.
+ * along with MaterialAPI. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package me.cybermaxke.chunkdata;
+package me.cybermaxke.materialapi.chunkdata;
 
 import java.io.IOException;
 
@@ -29,11 +30,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
 public class ChunkDataListener implements Listener {
-	private ChunkDataAPI api;
+	private final ChunkDataAPI api;
 
 	public ChunkDataListener(ChunkDataAPI api) {
 		api.getPlugin().getServer().getPluginManager().registerEvents(this, api.getPlugin());
@@ -52,7 +53,7 @@ public class ChunkDataListener implements Listener {
 	}
 
 	@EventHandler
-	public void onWorldLoad(WorldLoadEvent e) {
+	public void onWorldInit(WorldInitEvent e) {
 		this.api.loadData(e.getWorld());
 	}
 
@@ -72,8 +73,8 @@ public class ChunkDataListener implements Listener {
 				for (Chunk c : w.getLoadedChunks()) {
 					try {
 						this.api.getData(c).save();
-					} catch (IOException e1) {
-						e1.printStackTrace();
+					} catch (IOException ex) {
+						ex.printStackTrace();
 					}
 				}
 			}

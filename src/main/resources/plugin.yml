@@ -1,6 +1,6 @@
 name: ${project.name}
-main: ${MainClass}
+main: ${mainclass}
 version: ${project.version}
 description: ${project.description}
-author: ${Author}
+author: ${author}
 load: startup

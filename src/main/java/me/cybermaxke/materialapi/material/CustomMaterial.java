@@ -56,7 +56,7 @@ public abstract class CustomMaterial {
 
 	private int minecraftId = 0;
 	private int customId = 1000;
-	private int damage = -1;
+	private double damage = -1;
 	private byte data = -1;
 
 	private boolean canPlace = true;
@@ -186,7 +186,7 @@ public abstract class CustomMaterial {
 	 * Returns the custom damage, '-1' if it was never changed.
 	 * @return The damage.
 	 */
-	public int getDamage() {
+	public double getDamage() {
 		return this.damage;
 	}
 
@@ -194,7 +194,7 @@ public abstract class CustomMaterial {
 	 * Sets the default damage to a custom value.
 	 * @param damage The damage.
 	 */
-	public CustomMaterial setDamage(int damage) {
+	public CustomMaterial setDamage(double damage) {
 		this.damage = damage;
 		return this;
 	}

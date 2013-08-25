@@ -23,7 +23,7 @@ package me.cybermaxke.materialapi;
 
 import java.util.logging.Level;
 
-import me.cybermaxke.chunkdata.ChunkDataAPI;
+import me.cybermaxke.materialapi.chunkdata.ChunkDataAPI;
 import me.cybermaxke.materialapi.map.MapData;
 import me.cybermaxke.materialapi.material.MaterialData;
 import me.cybermaxke.materialapi.recipe.RecipeData;

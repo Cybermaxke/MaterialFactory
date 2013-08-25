@@ -27,11 +27,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import me.cybermaxke.chunkdata.ChunkDataAPI;
 
 import me.cybermaxke.materialapi.MaterialAPI;
+import me.cybermaxke.materialapi.chunkdata.ChunkDataAPI;
 import me.cybermaxke.materialapi.inventory.CustomItemStack;
-import me.cybermaxke.tagutils.TagCompound;
+import me.cybermaxke.nbtutils.nbt.CompoundMap;
+import me.cybermaxke.nbtutils.nbt.IntTag;
 
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -207,13 +208,13 @@ public class MaterialData {
 	 * @return The block.
 	 */
 	public static Block setCustomBlockId(Block block, int id) {
-		ChunkDataAPI c = MaterialAPI.getChunkData();
-		TagCompound t = c.getBlockData(block).getTag();
+		ChunkDataAPI api = MaterialAPI.getChunkData();
+		CompoundMap map = api.getBlockData(block).getDataMap();
 
 		if (id == -1) {
-			t.remove(DATA_PATH);
+			map.remove(DATA_PATH);
 		} else {
-			t.setInteger(DATA_PATH, id);
+			map.put(new IntTag(DATA_PATH, id));
 		}
 
 		return block;
@@ -225,8 +226,8 @@ public class MaterialData {
 	 * @return The custom id.
 	 */
 	public static int getCustomId(Block block) {
-		ChunkDataAPI c = MaterialAPI.getChunkData();
-		TagCompound t = c.getBlockData(block).getTag();
-		return t.hasKey(DATA_PATH) ? t.getInteger(DATA_PATH) : -1;
+		ChunkDataAPI api = MaterialAPI.getChunkData();
+		CompoundMap map = api.getBlockData(block).getDataMap();
+		return map.containsKey(DATA_PATH) ? ((IntTag) map.get(DATA_PATH)).getValue() : -1;
 	}
 }

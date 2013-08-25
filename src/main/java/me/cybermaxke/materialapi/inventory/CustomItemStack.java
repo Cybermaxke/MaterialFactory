@@ -26,9 +26,11 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import me.cybermaxke.materialapi.enchantment.EnchantmentInstance;
 import me.cybermaxke.materialapi.material.CustomMaterial;
@@ -36,54 +38,47 @@ import me.cybermaxke.materialapi.material.MaterialData;
 import me.cybermaxke.materialapi.utils.Classes;
 import me.cybermaxke.materialapi.utils.InventoryUtils;
 import me.cybermaxke.materialapi.utils.ReflectionUtils;
-import me.cybermaxke.tagutils.Tag;
-import me.cybermaxke.tagutils.TagCompound;
-import me.cybermaxke.tagutils.TagList;
-import me.cybermaxke.tagutils.TagUtils;
+import me.cybermaxke.nbtutils.NbtUnwrapUtils;
+import me.cybermaxke.nbtutils.nbt.CompoundMap;
+import me.cybermaxke.nbtutils.nbt.CompoundTag;
+import me.cybermaxke.nbtutils.nbt.IntTag;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.inventory.meta.SkullMeta;
 
 /**
  * A custom itemstack to manage the custom materials.
  */
 public class CustomItemStack {
-	public static final String COLOR = "color";
-
-	public static final String SKULL_OWNER = "SkullOwner";
-
-	public static final String DISPLAY = "display";
-	public static final String NAME = "Name";
-	public static final String LORE = "Lore";
-
-	public static final String ENCHANTMENTS = "ench";
-	public static final String ENCHANTMENTS_ID = "id";
-	public static final String ENCHANTMENTS_LVL = "lvl";
-
-	public static final String REPAIR = "RepairCost";
+	private static final String DATA_TAG = "CustomNbtData";
+	private static final NbtUnwrapUtils UNWRAP_UTILS = new NbtUnwrapUtils();
 
 	private CustomMaterial material = null;
 	private ItemStack handle;
 
 	public CustomItemStack(Material mat, int amount, short damage) {
-		this.handle = new ItemStack(mat, amount, damage);
+		this(new ItemStack(mat, amount, damage));
 	}
 
 	public CustomItemStack(int id, int amount, short damage) {
-		this.handle = new ItemStack(id, amount, damage);
+		this(new ItemStack(id, amount, damage));
 	}
 
 	public CustomItemStack(int id, int amount) {
-		this.handle = new ItemStack(id, amount);
+		this(new ItemStack(id, amount));
 	}
 
 	public CustomItemStack(Material mat, int amount) {
-		this.handle = new ItemStack(mat, amount);
+		this(new ItemStack(mat, amount));
 	}
 
 	public CustomItemStack(Material mat) {
-		this.handle = new ItemStack(mat);
+		this(new ItemStack(mat));
 	}
 
 	/**
@@ -91,7 +86,9 @@ public class CustomItemStack {
 	 * @param itemstack The itemstack.
 	 */
 	public CustomItemStack(Object itemstack) {
-		this((ItemStack) (ReflectionUtils.getMethodObject(Classes.CB_CRAFT_ITEMSTACK, "asCraftMirror", new Class[] { Classes.NMS_ITEMSTACK }, null, new Object[] { itemstack })));
+		this((ItemStack) (ReflectionUtils.getMethodObject(Classes.CB_CRAFT_ITEMSTACK,
+				"asCraftMirror", new Class[] { Classes.NMS_ITEMSTACK }, null,
+				new Object[] { itemstack })));
 	}
 
 	/**
@@ -99,12 +96,13 @@ public class CustomItemStack {
 	 * @param itemstack The itemstack.
 	 */
 	public CustomItemStack(ItemStack itemstack) {
-		this(itemstack.getType(), itemstack.getAmount(), (short) itemstack.getDurability());
+		this.handle = UNWRAP_UTILS.getCraftItem(itemstack);
+		//this(itemstack.getType(), itemstack.getAmount(), (short) itemstack.getDurability());
 
-		TagCompound tag = TagUtils.getTag(itemstack);
-		this.setTag(tag);
-		if (tag != null && tag.hasKey(MaterialData.DATA_PATH)) {
-			this.material = MaterialData.getMaterialByCustomId(tag.getInteger(MaterialData.DATA_PATH));
+		CompoundMap map = this.getTag().getValue();
+		if (map.containsKey(MaterialData.DATA_PATH)) {
+			this.material = MaterialData
+					.getMaterialByCustomId(((IntTag) map.get(MaterialData.DATA_PATH)).getValue());
 		}
 	}
 
@@ -130,128 +128,41 @@ public class CustomItemStack {
 			this.handle.setDurability(Short.valueOf(material.getData() + ""));
 		}
 
-		this.setName(material.getName());
-		this.setLore(material.getLore());
-		this.setColor(material.getColor());
-		this.setSkullOwner(material.getSkullOwner());
+		ItemMeta meta = this.getMeta();
+		if (meta != null) {
+			meta.setDisplayName(material.getName());
+			meta.setLore(material.getLore() == null ? new ArrayList<String>() :
+				Arrays.asList(material.getLore()));
 
-		if (material.getEnchantments() != null) {
-			for (EnchantmentInstance e : material.getEnchantments()) {
-				this.addEnchantment(e.getEnchantment(), e.getLvl());
+			if (material.getEnchantments() != null) {
+				for (EnchantmentInstance e : material.getEnchantments()) {
+					this.addEnchantment(e.getEnchantment(), e.getLvl());
+				}
 			}
-		}
 
-		if (material.getColor() != null) {
-			this.setColor(material.getColor());
+			if (meta instanceof SkullMeta) {
+				String owner = material.getSkullOwner();
+				((SkullMeta) meta).setOwner(owner == null ? "" : owner);
+			} else if (meta instanceof LeatherArmorMeta) {
+				Color color = material.getColor();
+				if (color != null) {
+					((LeatherArmorMeta) meta).setColor(org.bukkit.Color.fromRGB(
+							material.getColor().getRGB()));
+				}
+			}
 		}
 
 		if (material.getMap() != null) {
 			material.getMap().apply(this.handle);
 		}
 
-		TagCompound tag = this.getTag() == null ? new TagCompound() : this.getTag();
-		tag.setInteger(MaterialData.DATA_PATH, material.getCustomId());
-		this.setTag(tag);
+		CompoundMap map = this.getDataMap();
+		map.put(new IntTag(MaterialData.DATA_PATH, material.getCustomId()));
+		this.setDataMap(map);
 	}
 
 	public void setAmount(int amount) {
 		this.handle.setAmount(amount);
-	}
-
-	public boolean addEnchantment(Enchantment enchantment, int lvl) {
-		return this.addEnchantment(enchantment, lvl, false);
-	}
-
-	public boolean addEnchantment(Enchantment enchantment, int lvl, boolean force) {
-		if (!force) {
-			if (lvl > enchantment.getMaxLevel() || lvl < enchantment.getStartLevel()) {
-				return false;
-			}
-
-			if (this.hasEnchantments()) {
-				for (Enchantment e : this.getEnchantments().keySet()) {
-					if (e.conflictsWith(enchantment)) {
-						return false;
-					}
-				}
-			}
-		}
-
-		TagCompound tag = this.getTag();
-		if (!this.hasEnchantments()) {
-			tag.set(ENCHANTMENTS, new TagList());
-		}
-
-		TagCompound c = new TagCompound();
-		c.setShort(ENCHANTMENTS_ID, (short) enchantment.getId());
-		c.setShort(ENCHANTMENTS_LVL, (short) lvl);
-		
-		tag.getList(ENCHANTMENTS).getValue().add(c);
-		this.setTag(tag);
-		return true;
-	}
-
-	public void addEnchantments(Map<Enchantment, Integer> enchantments) {
-		this.addEnchantments(enchantments, false);
-	}
-	
-	public void addEnchantments(Map<Enchantment, Integer> enchantments, boolean force) {
-		for (Entry<Enchantment, Integer> e : enchantments.entrySet()) {
-			this.addEnchantment(e.getKey(), e.getValue(), force);
-		}
-	}
-
-	public void setEnchantments(Map<Enchantment, Integer> enchantments) {
-		this.setEnchantments(enchantments, false);
-	}
-
-	public void setEnchantments(Map<Enchantment, Integer> enchantments, boolean force) {
-		this.clearEnchantments();
-		this.addEnchantments(enchantments, force);
-	}
-
-	public void clearEnchantments() {
-		TagCompound tag = this.getTag();
-		tag.remove(ENCHANTMENTS);
-		this.setTag(tag);
-	}
-
-	public int getEnchantmentLevel(Enchantment enchantment) {
-		return this.hasEnchantments() && this.hasEnchantment(enchantment) ? this.getEnchantments().get(enchantment) : 0;
-	}
-
-	public Map<Enchantment, Integer> getEnchantments() {
-		Map<Enchantment, Integer> m = new HashMap<Enchantment, Integer>();
-		TagCompound tag = this.getTag();
-
-		if (this.hasEnchantments()) {
-			return m;
-		}
-
-		for (Tag<?> t : tag.getList(ENCHANTMENTS).getValue()) {
-			TagCompound c = (TagCompound) t;
-			Enchantment enchantment = Enchantment.getById(c.getShort(ENCHANTMENTS_ID));
-			int lvl = c.getShort(ENCHANTMENTS_LVL);
-			m.put(enchantment, lvl);
-		}
-
-		return m;
-	}
-
-	public boolean hasEnchantment(Enchantment enchantment) {
-		return this.hasEnchantments() && this.getEnchantments().containsKey(enchantment);
-	}
-
-	public boolean hasEnchantments() {
-		return this.getTag().hasKey(ENCHANTMENTS);
-	}
-
-	public boolean removeEnchantment(Enchantment enchantment) {
-		boolean b = this.hasEnchantment(enchantment);
-		TagCompound tag = this.getTag();
-		tag.getList(ENCHANTMENTS).getValue().remove(new TagCompound(enchantment.getName()));
-		this.setTag(tag);
-		return b;
 	}
 
 	/**
@@ -286,51 +197,83 @@ public class CustomItemStack {
 		return this.handle.getTypeId();
 	}
 
-	public TagCompound getTag() {
-		TagCompound tag = TagUtils.getTag(this.handle);
-		return tag != null ? tag  : new TagCompound();
+	public CompoundTag getTag() {
+		CompoundTag tag = UNWRAP_UTILS.getTag(this.handle);
+		return tag == null ? new CompoundTag("", new CompoundMap()) : tag;
 	}
 
-	public void setTag(TagCompound tag) {
-		this.handle = TagUtils.setTag(this.handle, tag);
+	public void setTag(CompoundTag tag) {
+		UNWRAP_UTILS.setTag(this.handle, tag);
 	}
 
-	private TagCompound getDisplay() {
-		TagCompound tag = this.getTag();
+	public CompoundMap getDataMap() {
+		CompoundMap map = this.getTag().getValue();
+		return map.containsKey(DATA_TAG) ? ((CompoundTag) map.get(DATA_TAG)).getValue() :
+			new CompoundMap();
+	}
 
-		if (!tag.hasKey(DISPLAY)) {
-			tag.set(DISPLAY, new TagCompound());
-		}
+	public void setDataMap(CompoundMap map) {
+		CompoundTag tag = this.getTag();
+		CompoundMap map1 = tag.getValue();
+		map1.put(new CompoundTag(DATA_TAG, map));
 
-		return tag.getCompound(DISPLAY);
+		this.setTag(tag);
+	}
+
+	public ItemMeta getMeta() {
+		return this.handle.getItemMeta();
+	}
+
+	public boolean hasMeta() {
+		return this.getMeta() != null;
+	}
+
+	public void setMeta(ItemMeta meta) {
+		CompoundMap map = this.getDataMap();
+		this.handle.setItemMeta(meta);
+		this.setDataMap(map);
+	}
+
+	public boolean isSimilar(ItemStack itemstack) {
+		return this.handle.isSimilar(itemstack) && InventoryUtils.doItemsMatch(this, itemstack == null ? null
+				: new CustomItemStack(itemstack));
+	}
+
+	/**
+	 * Returns the itemstack.
+	 * @return The itemstack.
+	 */
+	public ItemStack getItem() {
+		return this.handle;
 	}
 
 	/**
 	 * Sets the display name.
 	 * @param name
 	 */
+	@Deprecated
 	public void setName(String name) {
-		TagCompound dis = this.getDisplay();
-		TagCompound tag = this.getTag();
+		ItemMeta meta = this.getMeta();
 
-		dis.setString(NAME, name);
-
-		tag.setCompound(DISPLAY, dis);
-		this.setTag(tag);
+		if (meta != null) {
+			meta.setDisplayName(name);
+			this.setMeta(meta);
+		}
 	}
 
 	/**
 	 * Gets the diplay name.
 	 * @return name.
 	 */
+	@Deprecated
 	public String getName() {
-		TagCompound dis = this.getDisplay();
-		return dis.hasKey(NAME) ? dis.getString(NAME) : null;
+		return this.hasMeta() ? this.getMeta().getDisplayName() : null;
 	}
 
 	/**
 	 * Gets if there is a display name.
 	 */
+	@Deprecated
 	public boolean hasName() {
 		return this.getName() != null;
 	}
@@ -339,24 +282,21 @@ public class CustomItemStack {
 	 * Sets the lore with removing the old ones.
 	 * @param lore
 	 */
+	@Deprecated
 	public void setLore(List<String> lore) {
-		TagCompound dis = this.getDisplay();
-		TagCompound tag = this.getTag();
+		ItemMeta meta = this.getMeta();
 
-		if (lore != null) {
-			dis.setStringList(DISPLAY, lore);
-		} else {
-			dis.remove(DISPLAY);
+		if (meta != null) {
+			meta.setLore(lore);
+			this.setMeta(meta);
 		}
-
-		tag.setCompound(DISPLAY, dis);
-		this.setTag(tag);
 	}
 
 	/**
 	 * Sets the lore with removing the old ones.
 	 * @param lore
 	 */
+	@Deprecated
 	public void setLore(String... lore) {
 		this.setLore(lore == null ? null : Arrays.asList(lore));
 	}
@@ -365,6 +305,7 @@ public class CustomItemStack {
 	 * Adds a list of lore.
 	 * @param lore
 	 */
+	@Deprecated
 	public void addLore(List<String> lore) {
 		List<String> l = this.getLore();
 
@@ -379,6 +320,7 @@ public class CustomItemStack {
 	 * Adds a list of lore.
 	 * @param lore
 	 */
+	@Deprecated
 	public void addLore(String... lore) {
 		this.addLore(lore == null ? null : Arrays.asList(lore));
 	}
@@ -387,69 +329,65 @@ public class CustomItemStack {
 	 * Returns the lore the item contains.
 	 * @return lore
 	 */
+	@Deprecated
 	public List<String> getLore() {
-		TagCompound dis = this.getDisplay();
-		return dis.hasKey(LORE) ? dis.getStringList(LORE) : new ArrayList<String>();
+		return this.hasMeta() ? this.getMeta().getLore() : new ArrayList<String>();
 	}
 
 	/**
 	 * Gets if there is lore.
 	 */
+	@Deprecated
 	public boolean hasLore() {
 		return !this.getLore().isEmpty();
-	}
-
-	public boolean isSimilar(ItemStack itemstack) {
-		return this.handle.isSimilar(itemstack) && InventoryUtils.doItemsMatch(this, itemstack == null ? null : new CustomItemStack(itemstack));
 	}
 
 	/**
 	 * Sets the owner name of a skull.
 	 * @param name The name.
 	 */
+	@Deprecated
 	public void setSkullOwner(String name) {
-		if (name == null) {
-			name = "";
-		}
+		ItemMeta meta = this.getMeta();
 
-		TagCompound tag = this.getTag();
-		tag.setString(SKULL_OWNER, name);
-		this.setTag(tag);
+		if (meta != null && meta instanceof SkullMeta) {
+			((SkullMeta) meta).setOwner(name == null ? "" : name);
+			this.setMeta(meta);
+		}
 	}
 
 	/**
 	 * Returns the owner name of the skull.
 	 * @return The name.
 	 */
+	@Deprecated
 	public String getSkullOwner() {
-		TagCompound tag = this.getTag();
-		return tag.hasKey(SKULL_OWNER) && !tag.getString(SKULL_OWNER).isEmpty() ? tag.getString(SKULL_OWNER) : null;
+		ItemMeta meta = this.getMeta();
+		return meta != null && meta instanceof SkullMeta ? ((SkullMeta) meta).getOwner() : null;
 	}
 
 	/**
 	 * Sets the color of a item if its dyeable.
 	 * @param color The bukkit color.
 	 */
+	@Deprecated
 	public void setBukkitColor(org.bukkit.Color color) {
-		TagCompound dis = this.getDisplay();
-		TagCompound tag = this.getTag();
+		ItemMeta meta = this.getMeta();
 
-		if (color != null) {
-			dis.setInteger(COLOR, color.asRGB());
-		} else {
-			dis.remove(COLOR);
+		if (meta != null && meta instanceof LeatherArmorMeta) {
+			((LeatherArmorMeta) meta).setColor(color);
+			this.setMeta(meta);
 		}
-
-		tag.set(DISPLAY, dis);
-		this.setTag(tag);
 	}
 
 	/**
 	 * Sets the color of a item if its dyeable.
 	 * @param color The color.
 	 */
+	@Deprecated
 	public void setColor(Color color) {
-		org.bukkit.Color c = color == null ? null : org.bukkit.Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue());
+		org.bukkit.Color c = color == null ? null :
+			org.bukkit.Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue());
 		this.setBukkitColor(c);
 	}
 
@@ -457,48 +395,134 @@ public class CustomItemStack {
 	 * Returns the bukkit color of a item if its dyeable.
 	 * @return The bukkit color.
 	 */
+	@Deprecated
 	public org.bukkit.Color getBukkitColor() {
-		TagCompound dis = this.getDisplay();
-		return dis.hasKey(COLOR) ? org.bukkit.Color.fromRGB(dis.getInteger(COLOR)) : null;
+		ItemMeta meta = this.getMeta();
+		return meta != null && meta instanceof LeatherArmorMeta ?
+				((LeatherArmorMeta) meta).getColor() : null;
 	}
 
 	/**
 	 * Returns the color of a item if its dyeable.
 	 * @return The color.
 	 */
+	@Deprecated
 	public Color getColor() {
     	return this.getBukkitColor() == null ? null : new Color(this.getBukkitColor().asRGB());
-	}
-
-	/**
-	 * Returns a copy of the itemstack.
-	 * @return The itemstack.
-	 */
-	public ItemStack getItem() {
-		return this.handle.clone();
 	}
 
 	/**
 	 * Gets the repair cost.
 	 * @return cost
 	 */
+	@Deprecated
 	public int getRepairCost() {
-		return this.hasRepairCost() ? this.getTag().getInteger(REPAIR) : 0;
+		ItemMeta meta = this.getMeta();
+		return meta != null && meta instanceof Repairable ?
+				((Repairable) meta).getRepairCost() : 0;
 	}
 
 	/**
 	 * Gets if the repair cost exists.
 	 * @return exists
 	 */
+	@Deprecated
 	public boolean hasRepairCost() {
-		return this.getTag().hasKey(REPAIR) && this.getTag().getInteger(REPAIR) > 0;
+		return this.getRepairCost() > 0;
 	}
 
 	/**
 	 * Sets the repair cost.
 	 * @param cost
 	 */
+	@Deprecated
 	public void setRepairCost(int cost) {
-		this.getTag().setInteger(REPAIR, cost);
+		ItemMeta meta = this.getMeta();
+
+		if (meta != null && meta instanceof Repairable) {
+			((Repairable) meta).setRepairCost(cost);
+			this.setMeta(meta);
+		}
+	}
+
+	public boolean addEnchantment(Enchantment enchantment, int lvl) {
+		return this.addEnchantment(enchantment, lvl, false);
+	}
+
+	public boolean addEnchantment(Enchantment enchantment, int lvl, boolean force) {
+		ItemMeta meta = this.getMeta();
+
+		boolean succes = false;
+		if (meta != null) {
+			succes = meta.addEnchant(enchantment, lvl, force);
+			this.setMeta(meta);
+		}
+
+		return succes;
+	}
+
+	public void addEnchantments(Map<Enchantment, Integer> enchantments) {
+		this.addEnchantments(enchantments, false);
+	}
+
+	public void addEnchantments(Map<Enchantment, Integer> enchantments, boolean force) {
+		for (Entry<Enchantment, Integer> e : enchantments.entrySet()) {
+			this.addEnchantment(e.getKey(), e.getValue(), force);
+		}
+	}
+
+	public void setEnchantments(Map<Enchantment, Integer> enchantments) {
+		this.setEnchantments(enchantments, false);
+	}
+
+	public void setEnchantments(Map<Enchantment, Integer> enchantments, boolean force) {
+		this.clearEnchantments();
+		this.addEnchantments(enchantments, force);
+	}
+
+	public void clearEnchantments() {
+		ItemMeta meta = this.getMeta();
+
+		if (meta != null) {
+			Set<Enchantment> enchants = meta.getEnchants().keySet();
+			Iterator<Enchantment> it = enchants.iterator();
+
+			while (it.hasNext()) {
+				Enchantment enchant = it.next();
+				it.remove();
+				meta.removeEnchant(enchant);
+			}
+
+			this.setMeta(meta);
+		}
+	}
+
+	public int getEnchantmentLevel(Enchantment enchantment) {
+		return this.hasEnchantments() && this.hasEnchantment(enchantment) ?
+				this.getEnchantments().get(enchantment) : 0;
+	}
+
+	public Map<Enchantment, Integer> getEnchantments() {
+		return this.hasMeta() ? this.getMeta().getEnchants() : new HashMap<Enchantment, Integer>();
+	}
+
+	public boolean hasEnchantment(Enchantment enchantment) {
+		return this.hasEnchantments() && this.getEnchantments().containsKey(enchantment);
+	}
+
+	public boolean hasEnchantments() {
+		return this.getEnchantments() != null && !this.getEnchantments().isEmpty();
+	}
+
+	public boolean removeEnchantment(Enchantment enchantment) {
+		ItemMeta meta = this.getMeta();
+
+		if (meta != null) {
+			boolean succes = meta.removeEnchant(enchantment);
+			this.setMeta(meta);
+			return succes;
+		}
+
+		return false;
 	}
 }

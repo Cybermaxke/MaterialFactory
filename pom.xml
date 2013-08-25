@@ -12,9 +12,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<BukkitVersion>1.5.2-R0.1</BukkitVersion>
-		<Author>Cybermaxke</Author>
-		<MainClass>me.cybermaxke.materialapi.MaterialAPI</MainClass>
+		<mainclass>me.cybermaxke.materialapi.MaterialAPI</mainclass>
+		<author>Cybermaxke</author>
 	</properties>
 
 	<!-- Distribution management -->
@@ -28,6 +27,15 @@
 	<!-- Repositories -->
 	<repositories>
 		<repository>
+			<id>cybermaxkes-repo</id>
+			<url>http://dl.dropbox.com/u/104060836/mvn-repo</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+
+		<repository>
 			<id>bukkit-repo</id>
 			<url>http://repo.bukkit.org/content/groups/public</url>
 		</repository>
@@ -38,7 +46,13 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>${BukkitVersion}</version>
+			<version>1.6.2-R0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cybermaxke</groupId>
+			<artifactId>nbtutils</artifactId>
+			<version>dev-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -94,6 +108,48 @@
 						</manifestEntries>
 					</archive>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>cybermaxke:nbtutils:jar:*</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>lib/**</exclude>
+										<exclude>templates/**</exclude>
+										<exclude>META-INF/*.xml</exclude>
+										<exclude>META-INF/*.txt</exclude>
+										<exclude>**/LICENSE</exclude>
+										<exclude>**/NOTICE</exclude>
+										<exclude>**/DEPENDENCIES</exclude>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<relocations>
+								<relocation>
+									<pattern>me.cybermaxke.nbtutils</pattern>
+									<shadedPattern>me.cybermaxke.materialapi.nbtutils</shadedPattern>
+								</relocation>
+							</relocations>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

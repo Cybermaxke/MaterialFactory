@@ -22,6 +22,7 @@
 package me.cybermaxke.materialapi.enchantment;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -33,33 +34,32 @@ import org.bukkit.inventory.ItemStack;
 public abstract class EnchantmentCustom extends Enchantment {
 	public static final EnchantmentCustom DATA_ID = new EnchantmentCustomData(100);
 
+	@SuppressWarnings("unchecked")
 	public EnchantmentCustom(int id) {
 		super(id);
-		
+
 		if (id >= 256) {
 			throw new IllegalArgumentException("A enchantment id has to be lower then 256!");
 		}
-		
+
 		try {
 			Field byIdField = Enchantment.class.getDeclaredField("byId");
 			Field byNameField = Enchantment.class.getDeclaredField("byName");
 					
 			byIdField.setAccessible(true);
 			byNameField.setAccessible(true);
+
+			Map<Integer, Enchantment> byId = (Map<Integer, Enchantment>) byIdField.get(null);
+			Map<String, Enchantment> byName = (Map<String, Enchantment>) byNameField.get(null);
 					
-			@SuppressWarnings("unchecked")
-			HashMap<Integer, Enchantment> byId = (HashMap<Integer, Enchantment>) byIdField.get(null);
-			@SuppressWarnings("unchecked")
-			HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) byNameField.get(null);
-					
-			if(byId.containsKey(id))
+			if (byId.containsKey(id)) {
 				byId.remove(id);
+			}
 					
-			if(byName.containsKey(this.getName()))
+			if (byName.containsKey(this.getName())) {
 				byName.remove(this.getName());
-		} catch (Exception ignored) {  }
-		
-		try {
+			}
+
 			Field f = Enchantment.class.getDeclaredField("acceptingNew");
 			f.setAccessible(true);
 			f.set(null, Boolean.valueOf(true));

@@ -19,31 +19,30 @@
  * along with MaterialAPI. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package me.cybermaxke.materialapi.map;
+package me.cybermaxke.materialapi.chunkdata;
 
-import java.awt.image.BufferedImage;
+import me.cybermaxke.nbtutils.nbt.CompoundMap;
 
-import org.bukkit.entity.Player;
-import org.bukkit.map.MapCanvas;
-import org.bukkit.map.MapCursorCollection;
-import org.bukkit.map.MapRenderer;
-import org.bukkit.map.MapView;
+public class ChunkData {
+	protected CompoundMap data = new CompoundMap();
 
-/**
- * Rendering images on a map and removing the cursors.
- */
-public class ImageMapRenderer extends MapRenderer {
-	private final BufferedImage img;
+	public void setTag(CompoundMap data) {
+		this.data = data;
+	}
 
-	public ImageMapRenderer(BufferedImage image) {
-		this.img = image;
+	public CompoundMap getDataMap() {
+		return this.data;
+	}
+
+	public void clear() {
+		this.data.clear();
 	}
 
 	@Override
-	public void render(MapView view, MapCanvas canvas, Player player) {
-		if (this.img != null) {
-			canvas.drawImage(0, 0, this.img);
-			canvas.setCursors(new MapCursorCollection());
-		}
+	public ChunkData clone() {
+		ChunkData data = new ChunkData();
+		data.data = this.data;
+
+		return data;
 	}
 }

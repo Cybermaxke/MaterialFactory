@@ -1,24 +1,25 @@
 /**
  * 
- * This software is part of the ChunkDataAPI
+ * This software is part of the MaterialAPI
  * 
- * This api allows plugin developers to store custom data into blocks.
+ * This api allows plugin developers to create on a easy way custom
+ * items with a custom id and recipes depending on them.
  * 
- * ChunkDataAPI is free software: you can redistribute it and/or modify
+ * MaterialAPI is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or 
  * any later version.
  *  
- * ChunkDataAPI is distributed in the hope that it will be useful,
+ * MaterialAPI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ChunkDataAPI. If not, see <http://www.gnu.org/licenses/>.
+ * along with MaterialAPI. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package me.cybermaxke.chunkdata;
+package me.cybermaxke.materialapi.chunkdata;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,13 +33,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ChunkDataAPI {
-	private File f;
-	private Plugin plugin;
-	private List<ChunkDataMap> data = new ArrayList<ChunkDataMap>();
+	private final List<ChunkDataMap> data = new ArrayList<ChunkDataMap>();
+	private final Plugin plugin;
+	private final File file;
 
 	public ChunkDataAPI(Plugin plugin) {
 		this.plugin = plugin;
-		this.f = new File(this.plugin.getDataFolder() + File.separator + "ChunkData");
+		this.file = new File(this.plugin.getDataFolder() + File.separator + "ChunkData");
 		new ChunkDataListener(this);
 		new UpdateWorlds(this);
 	}
@@ -48,11 +49,11 @@ public class ChunkDataAPI {
 	}
 
 	public void loadData(World world) {
-		if (!this.f.exists()) {
-			this.f.mkdirs();
+		if (!this.file.exists()) {
+			this.file.mkdirs();
 		}
 
-		File f = new File(this.f + File.separator + world.getName());
+		File f = new File(this.file + File.separator + world.getName());
 
 		if (!f.exists()) {
 			return;
@@ -60,7 +61,11 @@ public class ChunkDataAPI {
 
 		for (File d : f.listFiles()) {
 			if (d.getName().endsWith(".cdata")) {
-				this.data.add(ChunkDataMap.load(d));
+				try {
+					this.data.add(ChunkDataMap.load(d));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -72,7 +77,7 @@ public class ChunkDataAPI {
 			}
 		}
 
-		File f1 = new File(this.f + File.separator + chunk.getWorld().getName());
+		File f1 = new File(this.file + File.separator + chunk.getWorld().getName());
 
 		if (!f1.exists()) {
 			f1.mkdirs();
