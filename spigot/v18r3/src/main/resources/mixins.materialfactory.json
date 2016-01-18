@@ -1,0 +1,8 @@
+{
+    "required": true,
+    "package": "me.cybermaxke.materialfactory.v18r3.mixin",
+    "priority": 1000,
+    "mixins": [
+    	"bukkit.MixinCraftServer"
+    ]
+}

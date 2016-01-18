@@ -4,6 +4,7 @@ import java.util.logging.Level;
 
 import me.cybermaxke.materialfactory.api.ExtendedItemStack;
 import me.cybermaxke.materialfactory.api.ItemData;
+import me.cybermaxke.materialfactory.api.data.DataQuery;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +21,9 @@ public final class MaterialFactoryPlugin extends JavaPlugin {
     	// Testing whether the class are injected correctly
         ExtendedItemStack itemStack = (ExtendedItemStack) new ItemStack(Material.APPLE);
         ItemData itemData = itemStack.getItemMeta();
+        itemData.getDataContainer().set(DataQuery.of("test"), "Hehe :p");
+        itemStack.setItemMeta(itemData);
+        itemStack.setAmount(10);
 
         this.getLogger().log(Level.INFO, "Successfully loaded!");
     }

@@ -1,4 +1,4 @@
-package me.cybermaxke.materialfactory.asm;
+package me.cybermaxke.materialfactory.common.asm;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,15 +19,13 @@ public final class ClassRenameVisitor extends ClassVisitor {
     }
 
     @Override
-    public void visit(int version, int access, String name, String signature, String superName,
-            String[] interfaces) {
+    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         this.oldNames.add(name);
         super.visit(version, Opcodes.ACC_PUBLIC, this.newName, signature, superName, interfaces);
     }
 
     @Override
-    public MethodVisitor visitMethod(int access, String name, String desc, String signature,
-            String[] exceptions) {
+    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, fix(desc), fix(signature), exceptions);
         if (mv != null && (access & Opcodes.ACC_ABSTRACT) == 0) {
             mv = new MethodRenamer(mv);
@@ -48,20 +46,12 @@ public final class ClassRenameVisitor extends ClassVisitor {
 
         @Override
         public void visitFieldInsn(int opcode, String owner, String name, String desc) {
-            if (oldNames.contains(owner)) {
-                super.visitFieldInsn(opcode, newName, name, fix(desc));
-            } else {
-                super.visitFieldInsn(opcode, owner, name, fix(desc));
-            }
+            super.visitFieldInsn(opcode, oldNames.contains(owner) ? newName : owner, name, fix(desc));
         }
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean inf) {
-            if (oldNames.contains(owner)) {
-                super.visitMethodInsn(opcode, newName, name, fix(desc), inf);
-            } else {
-                super.visitMethodInsn(opcode, owner, name, fix(desc), inf);
-            }
+            super.visitMethodInsn(opcode, oldNames.contains(owner) ? newName : owner, name, fix(desc), inf);
         }
     }
 
@@ -70,7 +60,7 @@ public final class ClassRenameVisitor extends ClassVisitor {
             Iterator<String> it = this.oldNames.iterator();
             String name;
             while (it.hasNext()) {
-                name = (String) it.next();
+                name = it.next();
                 if (desc.indexOf(name) != -1) {
                     desc = desc.replaceAll(name, this.newName);
                 }

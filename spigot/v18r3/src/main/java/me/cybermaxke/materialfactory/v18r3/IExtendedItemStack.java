@@ -14,7 +14,7 @@ import me.cybermaxke.materialfactory.api.ItemTypes;
 
 public interface IExtendedItemStack extends ExtendedItemStack {
 
-    static final String customItemType = "cymb_itype";
+    String customItemType = "cymb_itype";
 
     @Override
     default ItemType getItemType() {
@@ -39,8 +39,12 @@ public interface IExtendedItemStack extends ExtendedItemStack {
 
     @Override
     default ItemData getItemMeta() {
-        ItemStack item = (ItemStack) this;
-        return (ItemData) item.getItemMeta();
+        return (ItemData) ((ItemStack) this).getItemMeta();
+    }
+
+    @Override
+    default ExtendedItemStack copy() {
+        return (ExtendedItemStack) ((ItemStack) this).clone();
     }
 
 }

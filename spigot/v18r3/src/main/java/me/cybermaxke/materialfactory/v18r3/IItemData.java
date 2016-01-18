@@ -17,8 +17,8 @@ import static me.cybermaxke.materialfactory.v18r3.SMaterialFactory.unhandledTags
 @SuppressWarnings("unchecked")
 public interface IItemData extends ItemData {
 
-    static final String extraDataKey = "cybm_ifd";
-    static final Map<ItemMeta, NBTTagCompound> dataContainers = new MapMaker().weakKeys().makeMap();
+    String extraDataKey = "cybm_ifd";
+    Map<ItemMeta, NBTTagCompound> dataContainers = new MapMaker().weakKeys().makeMap();
 
     default Map<String, NBTBase> getUnhandledTags() {
         try {

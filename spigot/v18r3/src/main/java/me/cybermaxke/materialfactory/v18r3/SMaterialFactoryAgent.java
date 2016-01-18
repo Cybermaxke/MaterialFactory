@@ -17,7 +17,6 @@ import com.google.common.collect.Lists;
 public final class SMaterialFactoryAgent {
 
     public static void premain(String agentArgs, Instrumentation instrumentation) throws Exception {
-        // injectInterfaces();
         instrumentation.addTransformer(new Transformer());
         System.out.println("[ItemFactory] Successfully loaded the java agent.");
     }

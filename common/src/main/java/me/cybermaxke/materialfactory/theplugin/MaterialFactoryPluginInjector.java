@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import me.cybermaxke.materialfactory.asm.ClassRenameVisitor;
+import me.cybermaxke.materialfactory.common.asm.ClassRenameVisitor;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;

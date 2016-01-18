@@ -28,12 +28,30 @@ repositories {
     maven {
         url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
+    maven {
+        url 'https://repo.spongepowered.org/maven/'
+    }
+	maven {
+       url 'http://files.minecraftforge.net/maven'
+    }
+	maven {
+        // because Srg2Source needs an eclipse dependency.
+        name = "eclipse"
+        url = "https://repo.eclipse.org/content/groups/eclipse/"
+    }
+    maven {
+        name = 'minecraft'
+        url = 'https://libraries.minecraft.net/'
+    }
 }
 
 // Dependencies
 dependencies {
     compile project(':materialfactory-api')
     compile 'org.ow2.asm:asm-all:5.0.3'
+	compile 'org.spongepowered:mixin:0.4.7-SNAPSHOT'
+	compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'
+	compile 'org.apache.logging.log4j:log4j-core:2.0-beta9'
 }
 
 jar {
