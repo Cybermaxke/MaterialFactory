@@ -5,8 +5,8 @@ import org.bukkit.plugin.Plugin;
 public interface RegisteredItemType {
 
     Plugin getPlugin();
-    
+
     String getIdentifier();
-    
+
     ItemType getItemType();
 }

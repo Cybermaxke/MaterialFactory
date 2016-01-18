@@ -10,7 +10,7 @@ public interface ItemType {
 
     /**
      * Gets the name of the item type.
-     * 
+     *
      * @return the name
      */
     BaseComponent getName();

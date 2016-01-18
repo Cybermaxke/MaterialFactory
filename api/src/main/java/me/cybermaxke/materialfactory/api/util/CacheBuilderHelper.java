@@ -3,12 +3,12 @@
  */
 package me.cybermaxke.materialfactory.api.util;
 
+import com.google.common.base.Equivalence;
+import com.google.common.cache.CacheBuilder;
+
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.google.common.base.Equivalence;
-import com.google.common.cache.CacheBuilder;
 
 public final class CacheBuilderHelper {
 
@@ -20,7 +20,7 @@ public final class CacheBuilderHelper {
      *
      * <p>By default, the cache uses {@link Equivalence#identity} to determine key equality when
      * {@link CacheBuilder#weakKeys} is specified, and {@link Equivalence#equals} otherwise.
-     * 
+     *
      * @param builder the builder to apply the equivalence to
      * @param equivalence the equivalence strategy to apply
      * @return the builder for chaining
@@ -49,7 +49,7 @@ public final class CacheBuilderHelper {
      * <p>By default, the cache uses {@link Equivalence#identity} to determine value equality when
      * {@link CacheBuilder#weakValues} or {@link CacheBuilder#softValues} is specified,
      * and {@link Equivalence#equals} otherwise.
-     * 
+     *
      * @param builder the builder to apply the equivalence to
      * @param equivalence the equivalence strategy to apply
      * @return the builder for chaining

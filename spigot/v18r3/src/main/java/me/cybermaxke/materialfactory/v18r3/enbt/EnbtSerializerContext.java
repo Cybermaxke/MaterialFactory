@@ -6,7 +6,7 @@ public class EnbtSerializerContext {
 
     /**
      * Serializes the object as a {@link EnbtEntry}.
-     * 
+     *
      * @param object the object
      * @return the enbt entry
      */
@@ -17,7 +17,7 @@ public class EnbtSerializerContext {
     /**
      * Serializes the object as a {@link NBTBase}, this tag will
      * also contain enbt entry data.
-     * 
+     *
      * @param object the object
      * @return the nbt base
      */
@@ -27,7 +27,7 @@ public class EnbtSerializerContext {
 
     /**
      * Deserializes a object from the {@link EnbtEntry}.
-     * 
+     *
      * @param entry the enbt entry
      * @return the object
      */
@@ -37,7 +37,7 @@ public class EnbtSerializerContext {
 
     /**
      * Deserializes a object from the {@link NBTBase}.
-     * 
+     *
      * @param nbt the nbt base
      * @return the object
      */

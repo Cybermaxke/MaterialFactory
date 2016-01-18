@@ -1,6 +1,7 @@
 package net.minecraft.launchwrapper;
 
 import com.google.common.io.ByteStreams;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +15,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.slf4j.LoggerFactory;
 
 public class LaunchClassLoader extends URLClassLoader {
 
@@ -33,7 +32,7 @@ public class LaunchClassLoader extends URLClassLoader {
         super(new URL[0], parent.getParent());
         this.parent = parent;
     }
-    
+
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         return this.parent.loadClass(name);
@@ -114,7 +113,7 @@ public class LaunchClassLoader extends URLClassLoader {
             System.out.println("Transformer registered: " + transformerClassName);
         } catch (Exception e) {
             LoggerFactory.getLogger("LaunchWrapper").error(
-            		"A critical problem occurred registering the ASM transformer class {}", transformerClassName, e);
+                    "A critical problem occurred registering the ASM transformer class {}", transformerClassName, e);
         }
     }
 }

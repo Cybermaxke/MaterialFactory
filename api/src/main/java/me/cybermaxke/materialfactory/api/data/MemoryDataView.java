@@ -2,8 +2,8 @@ package me.cybermaxke.materialfactory.api.data;
 
 import static me.cybermaxke.materialfactory.api.data.DataQuery.of;
 
-import com.google.common.base.Objects;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
@@ -96,7 +96,7 @@ public class MemoryDataView extends AbstractDataView {
         final MemoryDataView other = (MemoryDataView) obj;
 
         return Objects.equal(this.map.entrySet(), other.map.entrySet())
-               && Objects.equal(this.path, other.path);
+                && Objects.equal(this.path, other.path);
     }
 
     @Override

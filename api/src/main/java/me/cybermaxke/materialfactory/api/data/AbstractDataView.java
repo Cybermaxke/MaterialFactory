@@ -1,14 +1,14 @@
 package me.cybermaxke.materialfactory.api.data;
 
-import static me.cybermaxke.materialfactory.api.data.DataQuery.of;
-
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+import static me.cybermaxke.materialfactory.api.data.DataQuery.of;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
+import me.cybermaxke.materialfactory.api.util.Coerce;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.util.ArrayList;
@@ -17,8 +17,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import me.cybermaxke.materialfactory.api.util.Coerce;
 
 /**
  * Default implementation of a {@link DataView} being used in memory.
@@ -45,7 +43,7 @@ public abstract class AbstractDataView implements DataView {
 
     /**
      * Gets whether the underlying map the specifying key contains.
-     * 
+     *
      * @param key the key
      * @return whether the underlying map contains the key
      */
@@ -53,7 +51,7 @@ public abstract class AbstractDataView implements DataView {
 
     /**
      * Gets a object from the underlying map for the specified key.
-     * 
+     *
      * @param key the key
      * @return the object if found, otherwise null
      */
@@ -61,7 +59,7 @@ public abstract class AbstractDataView implements DataView {
 
     /**
      * Puts a object in the underlying map for the specified key.
-     * 
+     *
      * @param key the key
      * @param object the object
      */
@@ -69,14 +67,14 @@ public abstract class AbstractDataView implements DataView {
 
     /**
      * Removes the object for the specified key from the underlying map.
-     * 
+     *
      * @param key the key
      */
     protected abstract void remove(String key);
 
     /**
      * Creates a sub view for the specified path.
-     * 
+     *
      * @param path the path
      * @return the data view
      */

@@ -1,13 +1,12 @@
 package me.cybermaxke.materialfactory.v18r3.enbt;
 
+import com.google.common.collect.Lists;
+import me.cybermaxke.materialfactory.api.util.Coerce;
+import net.minecraft.server.v1_8_R3.NBTTagList;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import com.google.common.collect.Lists;
-
-import me.cybermaxke.materialfactory.api.util.Coerce;
-import net.minecraft.server.v1_8_R3.NBTTagList;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class SerialCollection implements EnbtSerializer<Collection, NBTTagList> {
@@ -34,7 +33,7 @@ public class SerialCollection implements EnbtSerializer<Collection, NBTTagList> 
                 }
             } else {
                 // 0 is not used
-                extraData = new int[] { -1 };
+                extraData = new int[]{-1};
                 for (Object obj : list) {
                     tag.add(ctx.serialize(obj));
                 }

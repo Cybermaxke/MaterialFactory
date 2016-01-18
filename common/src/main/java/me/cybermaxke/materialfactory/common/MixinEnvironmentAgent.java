@@ -1,10 +1,5 @@
 package me.cybermaxke.materialfactory.common;
 
-import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
-import java.lang.instrument.Instrumentation;
-import java.security.ProtectionDomain;
-
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
@@ -13,6 +8,8 @@ import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.MixinEnvironment.CompatibilityLevel;
 import org.spongepowered.asm.mixin.MixinEnvironment.Side;
+
+import java.lang.instrument.Instrumentation;
 
 public final class MixinEnvironmentAgent {
 
@@ -27,27 +24,23 @@ public final class MixinEnvironmentAgent {
         classLoader.addTransformerExclusion("org.apache.");
         classLoader.addTransformerExclusion("net.minecraft.launchwrapper.");
         
-        instrumentation.addTransformer(new ClassFileTransformer() {
-			@Override
-			public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
-					ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-				className = className.replace('/', '.');
-				for (String exclusion : classLoader.getTransformerExclusions()) {
-					if (className.startsWith(exclusion)) {
-						return classfileBuffer;
-					}
-				}
-				
-				for (IClassTransformer transformer : classLoader.getTransformers()) {
-					byte[] classfileBuffer0 = transformer.transform(null, className, classfileBuffer);
-					if (className.equals("org.bukkit.craftbukkit.v1_8_R3.CraftServer")) {
-						System.out.println("Transformed the class: " + className + " by "
-								+ transformer.getClass().getName() + " " + (classfileBuffer0 != classfileBuffer));
-					}
-					classfileBuffer = classfileBuffer0;
-				}
-				return classfileBuffer;
-			}
+        instrumentation.addTransformer((loader, className, classBeingRedefined, protectionDomain, classfileBuffer) -> {
+            className = className.replace('/', '.');
+            for (String exclusion : classLoader.getTransformerExclusions()) {
+                if (className.startsWith(exclusion)) {
+                    return classfileBuffer;
+                }
+            }
+
+            for (IClassTransformer transformer : classLoader.getTransformers()) {
+                byte[] classfileBuffer0 = transformer.transform(null, className, classfileBuffer);
+                if (className.equals("org.bukkit.craftbukkit.v1_8_R3.CraftServer")) {
+                    System.out.println("Transformed the class: " + className + " by "
+                            + transformer.getClass().getName() + " " + (classfileBuffer0 != classfileBuffer));
+                }
+                classfileBuffer = classfileBuffer0;
+            }
+            return classfileBuffer;
         });
 
         MixinBootstrap.init();
@@ -56,12 +49,10 @@ public final class MixinEnvironmentAgent {
         MixinEnvironment.getDefaultEnvironment()
                 .addConfiguration("mixins.materialfactory.json")
                 .setSide(Side.SERVER);
-        //MixinEnvironment.init(Phase.DEFAULT);
-        System.out.println("Phase: " + MixinEnvironment.getCurrentEnvironment().getPhase());
 
+        // Load the tweakers, this will allow the mixin environment to move
+        // to the next phases
         Launch.loadTweakers();
-
-        System.out.println("Phase: " + MixinEnvironment.getCurrentEnvironment().getPhase());
     }
 
     private MixinEnvironmentAgent() {

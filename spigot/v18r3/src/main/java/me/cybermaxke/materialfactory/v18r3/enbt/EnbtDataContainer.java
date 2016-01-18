@@ -3,17 +3,16 @@
  */
 package me.cybermaxke.materialfactory.v18r3.enbt;
 
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
 import me.cybermaxke.materialfactory.api.data.DataContainer;
 import me.cybermaxke.materialfactory.api.data.DataQuery;
 import me.cybermaxke.materialfactory.api.data.DataView;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
+
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public final class EnbtDataContainer extends EnbtDataView implements DataContainer {
 

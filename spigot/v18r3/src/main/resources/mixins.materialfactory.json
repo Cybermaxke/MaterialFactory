@@ -3,6 +3,8 @@
     "package": "me.cybermaxke.materialfactory.v18r3.mixin",
     "priority": 1000,
     "mixins": [
-    	"bukkit.MixinCraftServer"
+        "bukkit.MixinCraftMetaItem",
+    	"bukkit.MixinCraftServer",
+        "bukkit.MixinItemStack"
     ]
 }

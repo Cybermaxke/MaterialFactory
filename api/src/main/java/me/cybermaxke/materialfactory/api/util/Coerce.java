@@ -1,6 +1,7 @@
 package me.cybermaxke.materialfactory.api.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Booleans;
 import com.google.common.primitives.Bytes;
@@ -28,12 +29,13 @@ import javax.annotation.Nullable;
 public final class Coerce {
 
     private static final Pattern listPattern = Pattern.compile("^([\\(\\[\\{]?)(.+?)([\\)\\]\\}]?)$");
-    private static final String[] listPairings = { "([{", ")]}" };
+    private static final String[] listPairings = {"([{", ")]}"};
 
     /**
      * No subclasses for you.
      */
-    private Coerce() {}
+    private Coerce() {
+    }
 
     /**
      * Coerce the supplied object to a string.
@@ -83,7 +85,7 @@ public final class Coerce {
         }
 
         if (obj instanceof List) {
-            return (List<?>)obj;
+            return (List<?>) obj;
         }
 
         Class<?> clazz = obj.getClass();
@@ -92,7 +94,7 @@ public final class Coerce {
                 return Coerce.primitiveArrayToList(obj);
             }
 
-            return Arrays.asList((Object[])obj);
+            return Arrays.asList((Object[]) obj);
         }
 
         return Coerce.parseStringToList(obj.toString());
@@ -119,7 +121,7 @@ public final class Coerce {
                 return Optional.<List<?>>of(Coerce.primitiveArrayToList(obj));
             }
 
-            return Optional.<List<?>>of(Arrays.asList((Object[])obj));
+            return Optional.<List<?>>of(Arrays.asList((Object[]) obj));
         }
 
         return Optional.<List<?>>of(Coerce.parseStringToList(obj.toString()));
@@ -142,17 +144,17 @@ public final class Coerce {
 
         for (Object o : Coerce.toList(obj)) {
             if (ofClass.isAssignableFrom(o.getClass())) {
-                filteredList.add((T)o);
+                filteredList.add((T) o);
             } else if (ofClass.equals(String.class)) {
-                filteredList.add((T)Coerce.toString(o));
+                filteredList.add((T) Coerce.toString(o));
             } else if (ofClass.equals(Integer.TYPE) || ofClass.equals(Integer.class)) {
-                filteredList.add((T)(Integer)Coerce.toInteger(o));
+                filteredList.add((T) (Integer) Coerce.toInteger(o));
             } else if (ofClass.equals(Float.TYPE) || ofClass.equals(Float.class)) {
-                filteredList.add((T)new Float(Coerce.toDouble(o)));
+                filteredList.add((T) new Float(Coerce.toDouble(o)));
             } else if (ofClass.equals(Double.TYPE) || ofClass.equals(Double.class)) {
-                filteredList.add((T)(Double)Coerce.toDouble(o));
+                filteredList.add((T) (Double) Coerce.toDouble(o));
             } else if (ofClass.equals(Boolean.TYPE) || ofClass.equals(Boolean.class)) {
-                filteredList.add((T)(Boolean)Coerce.toBoolean(o));
+                filteredList.add((T) (Boolean) Coerce.toBoolean(o));
             }
         }
 
@@ -200,7 +202,7 @@ public final class Coerce {
         }
 
         if (obj instanceof Number) {
-            return ((Number)obj).intValue();
+            return ((Number) obj).intValue();
         }
 
         String strObj = Coerce.sanitiseNumber(obj);
@@ -261,7 +263,7 @@ public final class Coerce {
         }
 
         if (obj instanceof Number) {
-            return ((Number)obj).doubleValue();
+            return ((Number) obj).doubleValue();
         }
 
         Double parsed = Doubles.tryParse(Coerce.sanitiseNumber(obj));
@@ -565,7 +567,7 @@ public final class Coerce {
 
         if (enumClass.isAssignableFrom(obj.getClass())) {
             @SuppressWarnings("unchecked")
-            E enumObj = (E)obj;
+            E enumObj = (E) obj;
             return enumObj;
         }
 
@@ -609,7 +611,7 @@ public final class Coerce {
 
         if (pseudoEnumClass.isAssignableFrom(obj.getClass())) {
             @SuppressWarnings("unchecked")
-            T enumObj = (T)obj;
+            T enumObj = (T) obj;
             return enumObj;
         }
 
@@ -620,7 +622,7 @@ public final class Coerce {
                 if ((field.getModifiers() & Modifier.STATIC) != 0 && pseudoEnumClass.isAssignableFrom(field.getType())) {
                     String fieldName = field.getName();
                     @SuppressWarnings("unchecked")
-                    T entry = (T)field.get(null);
+                    T entry = (T) field.get(null);
                     if (strObj.equalsIgnoreCase(fieldName)) {
                         return entry;
                     }
@@ -672,21 +674,21 @@ public final class Coerce {
 
     private static List<?> primitiveArrayToList(Object obj) {
         if (obj instanceof boolean[]) {
-            return Booleans.asList((boolean[])obj);
+            return Booleans.asList((boolean[]) obj);
         } else if (obj instanceof char[]) {
-            return Chars.asList((char[])obj);
+            return Chars.asList((char[]) obj);
         } else if (obj instanceof byte[]) {
-            return Bytes.asList((byte[])obj);
+            return Bytes.asList((byte[]) obj);
         } else if (obj instanceof short[]) {
-            return Shorts.asList((short[])obj);
+            return Shorts.asList((short[]) obj);
         } else if (obj instanceof int[]) {
-            return Ints.asList((int[])obj);
+            return Ints.asList((int[]) obj);
         } else if (obj instanceof long[]) {
-            return Longs.asList((long[])obj);
+            return Longs.asList((long[]) obj);
         } else if (obj instanceof float[]) {
-            return Floats.asList((float[])obj);
+            return Floats.asList((float[]) obj);
         } else if (obj instanceof double[]) {
-            return Doubles.asList((double[])obj);
+            return Doubles.asList((double[]) obj);
         }
 
         return Collections.<Object>emptyList();

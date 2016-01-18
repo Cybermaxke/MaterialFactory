@@ -2,15 +2,6 @@ package me.cybermaxke.materialfactory.v18r3.enbt;
 
 import static me.cybermaxke.materialfactory.api.data.DataQuery.of;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-
-import net.minecraft.server.v1_8_R3.NBTBase;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-
 import com.google.common.base.Equivalence;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -18,12 +9,19 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
 import com.google.common.collect.Sets;
-
 import me.cybermaxke.materialfactory.api.data.AbstractDataView;
 import me.cybermaxke.materialfactory.api.data.DataContainer;
 import me.cybermaxke.materialfactory.api.data.DataQuery;
 import me.cybermaxke.materialfactory.api.data.DataView;
 import me.cybermaxke.materialfactory.api.util.CacheBuilderHelper;
+import net.minecraft.server.v1_8_R3.NBTBase;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 public class EnbtDataView extends AbstractDataView {
 
@@ -32,11 +30,11 @@ public class EnbtDataView extends AbstractDataView {
     private static final LoadingCache<CacheKey, EnbtDataView> cache =
             CacheBuilderHelper.keyEquivalence(CacheBuilder.newBuilder().weakKeys(), Equivalence.equals())
                     .build(new CacheLoader<CacheKey, EnbtDataView>() {
-                @Override
-                public EnbtDataView load(CacheKey key) throws Exception {
-                    return new EnbtDataView(key.tag, key.parent, key.path);
-                }
-            });
+                        @Override
+                        public EnbtDataView load(CacheKey key) throws Exception {
+                            return new EnbtDataView(key.tag, key.parent, key.path);
+                        }
+                    });
 
     private static EnbtDataView getCachedView(DataView parent, DataQuery path, NBTTagCompound tag) {
         return getCachedView(new CacheKey(parent, path, tag));
@@ -113,7 +111,7 @@ public class EnbtDataView extends AbstractDataView {
 
     /**
      * Gets the underlying tag of the data view.
-     * 
+     *
      * @return the tag
      */
     public NBTTagCompound getTag() {
@@ -128,13 +126,11 @@ public class EnbtDataView extends AbstractDataView {
             builder.add(of(entry.getKey()));
         }
         if (deep) {
-            for (Map.Entry<String, NBTBase> entry : this.map.entrySet()) {
-                if (entry.getValue() instanceof DataView) {
-                    for (DataQuery query : ((DataView) entry.getValue()).getKeys(true)) {
-                        builder.add(of(entry.getKey()).then(query));
-                    }
+            this.map.entrySet().stream().filter(entry -> entry.getValue() instanceof DataView).forEach(entry -> {
+                for (DataQuery query : ((DataView) entry.getValue()).getKeys(true)) {
+                    builder.add(of(entry.getKey()).then(query));
                 }
-            }
+            });
         }
         return builder.build();
     }

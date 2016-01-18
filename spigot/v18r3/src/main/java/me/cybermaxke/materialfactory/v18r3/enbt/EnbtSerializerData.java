@@ -1,8 +1,8 @@
 package me.cybermaxke.materialfactory.v18r3.enbt;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.server.v1_8_R3.NBTBase;
+
+import javax.annotation.Nullable;
 
 public class EnbtSerializerData<N extends NBTBase> {
 

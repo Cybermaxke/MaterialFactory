@@ -13,7 +13,7 @@ public interface RecipeWrapper extends org.bukkit.inventory.Recipe {
 
     /**
      * Gets the recipe base of the custom recipe.
-     * 
+     *
      * @return the recipe base
      */
     Recipe getBase();

@@ -18,8 +18,8 @@ version = '1.0.0-SNAPSHOT'
 
 // Repositories
 repositories {
-	mavenCentral()
-	maven {
+    mavenCentral()
+    maven {
         url 'https://oss.sonatype.org/content/groups/public/'
     }
     maven {
@@ -35,6 +35,6 @@ dependencies {
 }
 
 jar {
-	// classifier
-	classifier = 'release'
+    // classifier
+    classifier = 'release'
 }

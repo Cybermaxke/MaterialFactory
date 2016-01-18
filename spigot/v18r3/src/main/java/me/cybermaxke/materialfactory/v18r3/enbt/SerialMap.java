@@ -1,12 +1,11 @@
 package me.cybermaxke.materialfactory.v18r3.enbt;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.google.common.collect.Maps;
-
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.NBTTagList;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 @SuppressWarnings("rawtypes")
 public class SerialMap implements EnbtSerializer<Map, NBTTagList> {

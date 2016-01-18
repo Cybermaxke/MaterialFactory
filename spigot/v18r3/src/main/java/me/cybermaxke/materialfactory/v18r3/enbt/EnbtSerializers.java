@@ -1,16 +1,15 @@
 package me.cybermaxke.materialfactory.v18r3.enbt;
 
+import com.google.common.collect.Maps;
+import net.minecraft.server.v1_8_R3.IntHashMap;
+import net.minecraft.server.v1_8_R3.NBTBase;
+
 import java.util.Collection;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Maps;
-
-import net.minecraft.server.v1_8_R3.IntHashMap;
-import net.minecraft.server.v1_8_R3.NBTBase;
-
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class EnbtSerializers {
 
     private static final EnbtSerializerContext ctx = new EnbtSerializerContext();
@@ -24,7 +23,7 @@ public class EnbtSerializers {
         private final int type;
         private final boolean def;
 
-        public EnbtRegistryEntry(EnbtSerializer<?,?> serial, int type, boolean def) {
+        public EnbtRegistryEntry(EnbtSerializer<?, ?> serial, int type, boolean def) {
             this.serial = serial;
             this.type = type;
             this.def = def;
@@ -82,7 +81,7 @@ public class EnbtSerializers {
 
     /**
      * Serializes the object as a {@link EnbtEntry}.
-     * 
+     *
      * @param object the object
      * @return the enbt entry
      */
@@ -102,7 +101,7 @@ public class EnbtSerializers {
     /**
      * Serializes the object as a {@link NBTBase}, this tag will
      * also contain enbt entry data.
-     * 
+     *
      * @param object the object
      * @return the nbt base
      */
@@ -117,7 +116,7 @@ public class EnbtSerializers {
 
     /**
      * Deserializes a object from the {@link EnbtEntry}.
-     * 
+     *
      * @param entry the enbt entry
      * @return the object
      */
@@ -133,7 +132,7 @@ public class EnbtSerializers {
 
     /**
      * Deserializes a object from the {@link NBTBase}.
-     * 
+     *
      * @param nbt the nbt base
      * @return the object
      */
