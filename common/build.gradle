@@ -1,0 +1,48 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "1.2.2"
+}
+
+// Apply plugin
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+// Apply shadow plugin
+apply plugin: 'com.github.johnrengelman.shadow'
+
+// Minimum version of Java required
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+// Basic project information
+group = 'cybermaxke'
+archivesBaseName = 'materialfactory-common'
+version = '1.0.0-SNAPSHOT'
+
+// Repositories
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+}
+
+// Dependencies
+dependencies {
+    compile project(':materialfactory-api')
+    compile 'org.ow2.asm:asm-all:5.0.3'
+}
+
+jar {
+    // Jar shading and packaging configuration
+    from { project(':materialfactory-api').sourceSets.main.output }
+
+    // Classifier
+    classifier = 'release'
+
+    // Exclude empty directories
+    includeEmptyDirs = false
+}

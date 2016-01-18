@@ -1,0 +1,6 @@
+name: ${name}
+version: ${version}
+description: ${description}
+authors: [${authors}]
+main: ${mainclass}
+load: STARTUP

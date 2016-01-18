@@ -1,0 +1,9 @@
+rootProject.name = theName
+
+include 'materialfactory-api'
+include 'materialfactory-common'
+include 'materialfactory-spigot-v18r3'
+
+project(':materialfactory-api').projectDir = new File('api')
+project(':materialfactory-common').projectDir = new File('common')
+project(':materialfactory-spigot-v18r3').projectDir = new File('spigot/v18r3')

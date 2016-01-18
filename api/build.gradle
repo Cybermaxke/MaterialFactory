@@ -1,0 +1,40 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "1.2.2"
+}
+
+// Apply plugin
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+// Minimum version of Java required
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+// Basic project information
+group = 'cybermaxke'
+archivesBaseName = 'materialfactory-api'
+version = '1.0.0-SNAPSHOT'
+
+// Repositories
+repositories {
+	mavenCentral()
+	maven {
+        url 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+}
+
+// Dependencies
+dependencies {
+    compile 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+    compile 'net.md-5:bungeecord-chat:1.8-SNAPSHOT'
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
+}
+
+jar {
+	// classifier
+	classifier = 'release'
+}

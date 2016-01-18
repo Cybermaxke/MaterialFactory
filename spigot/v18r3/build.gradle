@@ -1,0 +1,113 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "1.2.2"
+}
+
+// Apply plugin
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+// Apply shadow plugin
+apply plugin: 'com.github.johnrengelman.shadow'
+
+// Minimum version of Java required
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+// Basic project information
+group = 'cybermaxke'
+archivesBaseName = 'materialfactory-spigot-v18r3'
+version = '1.0.0-SNAPSHOT'
+
+// Repositories
+repositories {
+	mavenCentral()
+	maven {
+        url 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+	maven {
+		url 'https://dl.dropboxusercontent.com/u/56755498/repository/spigot/'
+	}
+}
+
+// Dependencies
+dependencies {
+	compile project(':materialfactory-common')
+	compile 'org.spigotmc:spigot:1.8.8'
+    compile 'org.ow2.asm:asm-all:5.0.3'
+}
+
+jar {
+	// Jar shading and packaging configuration
+	from { project(':materialfactory-api').sourceSets.main.output }
+	from { project(':materialfactory-common').sourceSets.main.output }
+
+	// Classifier
+	classifier = 'release'
+
+	// Exclude empty directories
+	includeEmptyDirs = false
+	
+	// Add java agent settings
+	manifest {
+        attributes(
+                'Premain-Class': 'me.cybermaxke.materialfactory.v18r3.SMaterialFactoryAgent',
+                'Can-Redefine-Classes': true,
+                'Can-Retransform-Classes': true
+        )
+    }
+}
+
+shadowJar {
+    classifier = ''
+    exclude '**/*.java'
+    dependencies {
+    	include project(':materialfactory-common')
+        include dependency('org.ow2.asm:asm-all')
+        include dependency('com.google.code.findbugs:jsr305')
+    }
+}
+
+// Run shadowJar and sourceJar on build
+assemble.dependsOn shadowJar
+
+processResources {
+	ext.set('mainclass', 'me.cybermaxke.materialfactory.plugin.MaterialFactoryPlugin')
+
+	// This will ensure that this task is redone when the versions change.
+	inputs.property "name", project.theName
+	inputs.property "version", project.version
+	inputs.property "identifier", project.theIdentifier
+	inputs.property "description", project.theDescription
+	inputs.property "projectpage", project.theProjectPage
+	inputs.property "authors", project.theAuthors
+	inputs.property "credits", project.theCredits
+
+	// Add the main class path
+	inputs.property "mainclass", ext.mainclass
+
+	// Replace stuff in plugin.yml, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include 'thePlugin.yml'
+
+		// Replace the properties
+		expand([
+			'name':project.theName,
+			'version':project.version,
+			'identifier':project.theIdentifier,
+			'description':project.theDescription,
+			'projectpage':project.theProjectPage,
+			'authors':project.theAuthors,
+			'credits':project.theCredits,
+			'mainclass':ext.mainclass
+		])
+	}
+
+	// Copy everything else, thats not the plugin.yml
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'thePlugin.yml'
+	}
+}
