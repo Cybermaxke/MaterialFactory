@@ -7,10 +7,9 @@ import java.util.jar.JarOutputStream;
 
 import me.cybermaxke.materialfactory.common.asm.ClassRenameVisitor;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-
 import com.google.common.io.ByteStreams;
+import org.spongepowered.asm.lib.ClassReader;
+import org.spongepowered.asm.lib.ClassWriter;
 
 public final class MaterialFactoryPluginInjector {
 

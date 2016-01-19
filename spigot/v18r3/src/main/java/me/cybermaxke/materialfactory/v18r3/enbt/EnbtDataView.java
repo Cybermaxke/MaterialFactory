@@ -14,10 +14,10 @@ import me.cybermaxke.materialfactory.api.data.DataContainer;
 import me.cybermaxke.materialfactory.api.data.DataQuery;
 import me.cybermaxke.materialfactory.api.data.DataView;
 import me.cybermaxke.materialfactory.api.util.CacheBuilderHelper;
+import me.cybermaxke.materialfactory.v18r3.interfaces.IMixinNBTTagCompound;
 import net.minecraft.server.v1_8_R3.NBTBase;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -25,7 +25,6 @@ import java.util.concurrent.ExecutionException;
 
 public class EnbtDataView extends AbstractDataView {
 
-    private static Field nbtTagCompoundMap;
     private static final Map<NBTTagCompound, Set<CacheKey>> cacheKeys = new MapMaker().weakKeys().makeMap();
     private static final LoadingCache<CacheKey, EnbtDataView> cache =
             CacheBuilderHelper.keyEquivalence(CacheBuilder.newBuilder().weakKeys(), Equivalence.equals())
@@ -81,31 +80,17 @@ public class EnbtDataView extends AbstractDataView {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static Map<String, NBTBase> getMapFrom(NBTTagCompound nbtTag) {
-        try {
-            if (nbtTagCompoundMap == null) {
-                nbtTagCompoundMap = NBTTagCompound.class.getDeclaredField("map");
-                nbtTagCompoundMap.setAccessible(true);
-            }
-            return (Map<String, NBTBase>) nbtTagCompoundMap.get(nbtTag);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     private final NBTTagCompound tag;
     private final Map<String, NBTBase> map;
 
     EnbtDataView(NBTTagCompound tag) {
-        this.map = getMapFrom(tag);
+        this.map = ((IMixinNBTTagCompound) tag).getBacking();
         this.tag = tag;
     }
 
     EnbtDataView(NBTTagCompound tag, DataView parent, DataQuery path) {
         super(parent, path);
-        this.map = getMapFrom(tag);
+        this.map = ((IMixinNBTTagCompound) tag).getBacking();
         this.tag = tag;
     }
 

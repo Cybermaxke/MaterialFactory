@@ -1,12 +1,12 @@
 package me.cybermaxke.materialfactory.common.asm;
 
+import org.spongepowered.asm.lib.ClassVisitor;
+import org.spongepowered.asm.lib.MethodVisitor;
+import org.spongepowered.asm.lib.Opcodes;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 public final class ClassRenameVisitor extends ClassVisitor {
 

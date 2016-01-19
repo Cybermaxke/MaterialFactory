@@ -48,7 +48,6 @@ repositories {
 // Dependencies
 dependencies {
     compile project(':materialfactory-api')
-    compile 'org.ow2.asm:asm-all:5.0.3'
 	compile 'org.spongepowered:mixin:0.4.7-SNAPSHOT'
 	compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'
 	compile 'org.apache.logging.log4j:log4j-core:2.0-beta9'

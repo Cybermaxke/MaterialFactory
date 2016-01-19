@@ -50,27 +50,26 @@ repositories {
 
 // Dependencies
 dependencies {
-	compile project(':materialfactory-common')
-	compile 'org.spigotmc:spigot:1.8.8'
-    compile 'org.ow2.asm:asm-all:5.0.3'
-	compile 'org.spongepowered:mixin:0.4.7-SNAPSHOT'
-	compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'
-	compile 'org.apache.logging.log4j:log4j-core:2.0-beta9'
+    compile project(':materialfactory-common')
+    compile 'org.spigotmc:spigot:1.8.8'
+    compile 'org.spongepowered:mixin:0.4.7-SNAPSHOT'
+    compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'
+    compile 'org.apache.logging.log4j:log4j-core:2.0-beta9'
 }
 
 jar {
-	// Jar shading and packaging configuration
-	from { project(':materialfactory-api').sourceSets.main.output }
-	from { project(':materialfactory-common').sourceSets.main.output }
+    // Jar shading and packaging configuration
+    from { project(':materialfactory-api').sourceSets.main.output }
+    from { project(':materialfactory-common').sourceSets.main.output }
 
-	// Classifier
-	classifier = 'release'
+    // Classifier
+    classifier = 'release'
 
-	// Exclude empty directories
-	includeEmptyDirs = false
+    // Exclude empty directories
+    includeEmptyDirs = false
 	
-	// Add java agent settings
-	manifest {
+    // Add java agent settings
+    manifest {
         attributes(
                 'Premain-Class': 'me.cybermaxke.materialfactory.common.MixinEnvironmentAgent',
                 'Can-Redefine-Classes': true,
@@ -82,9 +81,9 @@ jar {
 shadowJar {
     classifier = ''
     exclude '**/*.java'
+    exclude 'org/spongepowered/tools/**/*.class'
     dependencies {
-    	include project(':materialfactory-common')
-        include dependency('org.ow2.asm:asm-all')
+        include project(':materialfactory-common')
         include dependency('com.google.code.findbugs:jsr305')
         include dependency('org.spongepowered:mixin')
     }

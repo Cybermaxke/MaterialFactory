@@ -31,14 +31,8 @@ public final class MixinEnvironmentAgent {
                     return classfileBuffer;
                 }
             }
-
             for (IClassTransformer transformer : classLoader.getTransformers()) {
-                byte[] classfileBuffer0 = transformer.transform(null, className, classfileBuffer);
-                if (className.equals("org.bukkit.craftbukkit.v1_8_R3.CraftServer")) {
-                    System.out.println("Transformed the class: " + className + " by "
-                            + transformer.getClass().getName() + " " + (classfileBuffer0 != classfileBuffer));
-                }
-                classfileBuffer = classfileBuffer0;
+                classfileBuffer = transformer.transform(null, className, classfileBuffer);
             }
             return classfileBuffer;
         });

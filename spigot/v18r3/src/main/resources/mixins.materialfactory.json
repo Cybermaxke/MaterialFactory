@@ -4,7 +4,8 @@
     "priority": 1000,
     "mixins": [
         "bukkit.MixinCraftMetaItem",
-    	"bukkit.MixinCraftServer",
-        "bukkit.MixinItemStack"
+        "bukkit.MixinCraftServer",
+        "bukkit.MixinItemStack",
+        "minecraft.MixinNBTTagCompound"
     ]
 }

@@ -1,11 +1,13 @@
 package me.cybermaxke.materialfactory.v18r3.mixin.bukkit;
 
+import static me.cybermaxke.materialfactory.common.ItemFactoryConstants.CUSTOM_ITEM_TYPE;
+
 import me.cybermaxke.materialfactory.api.ExtendedItemStack;
 import me.cybermaxke.materialfactory.api.ItemData;
 import me.cybermaxke.materialfactory.api.ItemType;
 import me.cybermaxke.materialfactory.api.ItemTypes;
-import me.cybermaxke.materialfactory.v18r3.IExtendedItemStack;
-import me.cybermaxke.materialfactory.v18r3.IItemData;
+import me.cybermaxke.materialfactory.v18r3.interfaces.IMixinItemStack;
+import me.cybermaxke.materialfactory.v18r3.interfaces.IMixinItemMeta;
 import me.cybermaxke.materialfactory.v18r3.SVanillaItemType;
 import net.minecraft.server.v1_8_R3.NBTBase;
 import net.minecraft.server.v1_8_R3.NBTTagString;
@@ -18,19 +20,19 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.Map;
 
 @Mixin(ItemStack.class)
-public abstract class MixinItemStack implements Cloneable, ConfigurationSerializable, IExtendedItemStack {
+public abstract class MixinItemStack implements Cloneable, ConfigurationSerializable, IMixinItemStack {
 
-    @Shadow private ItemMeta meta;
+    @Shadow(remap = false) private ItemMeta meta;
 
     @Override
     public ItemType getItemType() {
         ItemStack item = (ItemStack) ((Object) this);
         ItemType type = null;
         if (item.hasItemMeta()) {
-            IItemData itemData = (IItemData) item.getItemMeta();
+            IMixinItemMeta itemData = (IMixinItemMeta) item.getItemMeta();
             Map<String, NBTBase> map = itemData.getUnhandledTags();
-            if (map.containsKey(customItemType)) {
-                String itemId = ((NBTTagString) map.get(customItemType)).a_();
+            if (map.containsKey(CUSTOM_ITEM_TYPE)) {
+                String itemId = ((NBTTagString) map.get(CUSTOM_ITEM_TYPE)).a_();
                 // TODO: Lookup the item type
             }
         }
