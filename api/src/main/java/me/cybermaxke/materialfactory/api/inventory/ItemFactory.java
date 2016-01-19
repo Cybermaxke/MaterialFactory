@@ -1,5 +1,6 @@
-package me.cybermaxke.materialfactory.api;
+package me.cybermaxke.materialfactory.api.inventory;
 
+import me.cybermaxke.materialfactory.api.item.ItemType;
 import org.bukkit.Material;
 
 public interface ItemFactory {

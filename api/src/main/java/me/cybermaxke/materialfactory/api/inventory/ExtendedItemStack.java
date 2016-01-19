@@ -1,5 +1,6 @@
-package me.cybermaxke.materialfactory.api;
+package me.cybermaxke.materialfactory.api.inventory;
 
+import me.cybermaxke.materialfactory.api.item.ItemType;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -10,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public interface ExtendedItemStack {
 
-    static final ItemFactory factory = null;
+    ItemFactory factory = null;
 
     /**
      * Creates a new {@link ExtendedItemStack} for the specified item type.
@@ -18,7 +19,7 @@ public interface ExtendedItemStack {
      * @param itemType the item type
      * @return the extended item stack
      */
-    public static ExtendedItemStack create(ItemType itemType) {
+    static ExtendedItemStack create(ItemType itemType) {
         return factory.create(itemType);
     }
 
@@ -30,7 +31,7 @@ public interface ExtendedItemStack {
      * @param amount the size of the stack
      * @return the extended item stack
      */
-    public static ExtendedItemStack create(ItemType itemType, int amount) {
+    static ExtendedItemStack create(ItemType itemType, int amount) {
         return factory.create(itemType, amount);
     }
 
@@ -41,7 +42,7 @@ public interface ExtendedItemStack {
      * @return the extended item stack
      * @throws IllegalArgumentException if the specified material isn't a valid item
      */
-    public static ExtendedItemStack create(Material material) throws IllegalArgumentException {
+    static ExtendedItemStack create(Material material) throws IllegalArgumentException {
         return factory.create(material);
     }
 
@@ -54,7 +55,7 @@ public interface ExtendedItemStack {
      * @return the extended item stack
      * @throws IllegalArgumentException if the specified material isn't a valid item
      */
-    public static ExtendedItemStack create(Material material, int amount) throws IllegalArgumentException {
+    static ExtendedItemStack create(Material material, int amount) throws IllegalArgumentException {
         return factory.create(material, amount);
     }
 
@@ -74,6 +75,13 @@ public interface ExtendedItemStack {
      * @return the item type
      */
     ItemType getItemType();
+
+    /**
+     * Sets the {@link ItemType} of this item stack.
+     *
+     * @param itemType the item type
+     */
+    void setItemType(ItemType itemType);
 
     /**
      * Gets the amount of items in this item stack.

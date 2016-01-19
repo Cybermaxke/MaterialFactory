@@ -1,7 +1,7 @@
 package me.cybermaxke.materialfactory.common;
 
-import me.cybermaxke.materialfactory.api.ItemType;
-import me.cybermaxke.materialfactory.api.RegisteredItemType;
+import me.cybermaxke.materialfactory.api.item.ItemType;
+import me.cybermaxke.materialfactory.api.item.RegisteredItemType;
 import org.bukkit.plugin.Plugin;
 
 public class SimpleRegisteredItemType implements RegisteredItemType {

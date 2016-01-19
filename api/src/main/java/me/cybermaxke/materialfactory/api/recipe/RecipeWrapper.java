@@ -6,8 +6,8 @@ package me.cybermaxke.materialfactory.api.recipe;
 import org.bukkit.Bukkit;
 
 /**
- * This recipe wraps around a {@link RecipeBase} and allows this recipe to be
- * registered through the {@link Bukkit#addRecipe()} method.
+ * This recipe wraps around a {@link Recipe} and allows this recipe to be
+ * registered through the {@link Bukkit#addRecipe(org.bukkit.inventory.Recipe)} method.
  */
 public interface RecipeWrapper extends org.bukkit.inventory.Recipe {
 

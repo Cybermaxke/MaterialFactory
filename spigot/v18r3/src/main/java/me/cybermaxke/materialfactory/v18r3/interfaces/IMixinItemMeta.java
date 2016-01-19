@@ -1,7 +1,8 @@
 package me.cybermaxke.materialfactory.v18r3.interfaces;
 
-import me.cybermaxke.materialfactory.api.ItemData;
+import me.cybermaxke.materialfactory.api.inventory.ItemData;
 import net.minecraft.server.v1_8_R3.NBTBase;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
 import java.util.Map;
 
@@ -15,4 +16,5 @@ public interface IMixinItemMeta extends ItemData {
      */
     Map<String, NBTBase> getUnhandledTags();
 
+    void applyDataToItem(NBTTagCompound tagCompound);
 }

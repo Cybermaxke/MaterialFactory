@@ -20,12 +20,18 @@ public abstract class MixinCraftMetaItem implements ItemMeta, Repairable, IMixin
 
     @Shadow(remap = false) private Map<String, NBTBase> unhandledTags;
     @Override public abstract MixinCraftMetaItem clone();
+    @Shadow(remap = false) abstract void applyToItem(NBTTagCompound tagCompound);
 
     private DataContainer dataContainer;
 
     @Override
     public Map<String, NBTBase> getUnhandledTags() {
         return this.unhandledTags;
+    }
+
+    @Override
+    public void applyDataToItem(NBTTagCompound tagCompound) {
+        this.applyToItem(tagCompound);
     }
 
     @Override

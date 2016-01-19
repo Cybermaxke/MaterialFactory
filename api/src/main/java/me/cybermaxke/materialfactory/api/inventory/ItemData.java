@@ -1,4 +1,4 @@
-package me.cybermaxke.materialfactory.api;
+package me.cybermaxke.materialfactory.api.inventory;
 
 import me.cybermaxke.materialfactory.api.data.DataContainer;
 import org.bukkit.inventory.meta.ItemMeta;
